@@ -1,39 +1,93 @@
-export default function Home() {
-    const promptOfDay = {
-      title: "Prompt del Día",
-      content: "Explica [concepto] como si le estuvieras enseñando a un estudiante de [nivel]",
-      category: "Educación General"
-    };
-  
-    return (
-      <div className="space-y-6">
-        <section className="bg-white p-6 rounded-lg shadow">
-          <h1 className="text-3xl font-bold mb-4">{promptOfDay.title}</h1>
-          <div className="bg-gray-50 p-4 rounded border">
-            <p className="text-lg mb-2">{promptOfDay.content}</p>
-            <span className="text-sm text-gray-600">{promptOfDay.category}</span>
-          </div>
-        </section>
-        
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-bold mb-4">Prompts Populares</h2>
-            <ul className="space-y-2">
-              <li className="hover:bg-gray-50 p-2 rounded">Explicación de conceptos matemáticos</li>
-              <li className="hover:bg-gray-50 p-2 rounded">Generación de ejercicios</li>
-              <li className="hover:bg-gray-50 p-2 rounded">Evaluación de respuestas</li>
-            </ul>
-          </div>
-          
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-bold mb-4">Frameworks Destacados</h2>
-            <ul className="space-y-2">
-              <li className="hover:bg-gray-50 p-2 rounded">ICE Framework</li>
-              <li className="hover:bg-gray-50 p-2 rounded">CRAP Framework</li>
-              <li className="hover:bg-gray-50 p-2 rounded">AID Framework</li>
-            </ul>
-          </div>
-        </section>
-      </div>
-    );
-  }
+import { 
+  Box, 
+  Heading, 
+  Text, 
+  Input, 
+  SimpleGrid, 
+  Card, 
+  CardBody,
+  Button,
+  Image as ChakraImage,
+  Flex,
+  VStack,
+  HStack,
+  Spacer
+} from '@chakra-ui/react'
+import { useState } from 'react'
+import PromptOfDay from '../components/PromptOfDay'
+import CategoryCard from '../components/CategoryCard'
+
+function Home() {
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const categories = [
+    { title: 'Math', count: 124 },
+    { title: 'Science', count: 98 },
+    { title: 'Language Arts', count: 156 },
+    { title: 'Social Studies', count: 87 }
+  ]
+
+  return (
+    <Box>
+      <Box textAlign="center" mb={12}>
+        <Heading size="2xl" mb={4}>
+          Enhance Your Teaching with AI Prompts
+        </Heading>
+        <Text fontSize="xl" color="gray.600" mb={8}>
+          Discover and create effective prompts for your classroom
+        </Text>
+        <Input
+          maxW="600px"
+          placeholder="Search prompts..."
+          size="lg"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </Box>
+
+      <PromptOfDay />
+
+      <Box mt={16}>
+        <Heading size="xl" mb={8}>Featured Categories</Heading>
+        <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={6}>
+          {categories.map(category => (
+            <CategoryCard key={category.title} {...category} />
+          ))}
+        </SimpleGrid>
+      </Box>
+
+      <Box mt={16}>
+        <Heading size="xl" mb={8}>Free AI Resources</Heading>
+
+        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
+          <Card>
+            <CardBody>
+              <Heading size="md">AI in Education Guide</Heading>
+              <Text>Download our comprehensive guide on integrating AI into your classroom.</Text>
+              <Button colorScheme="brand" mt={4} as="a" href="/resources/ai-in-education-guide.pdf" download>
+                Download PDF
+              </Button>
+            </CardBody>
+          </Card>
+
+          {/* Add more resources here */}
+        </SimpleGrid>
+      </Box>
+
+      <Box mt={16}>
+        <Heading size="xl" mb={8}>Logos of Companies That Make This Possible</Heading>
+
+        <Flex direction="column" align="center">
+          <HStack spacing={4} mb={4}>
+            <ChakraImage src="/path/to/logo1.png" alt="Company Logo 1" boxSize="60px" />
+            <ChakraImage src="/path/to/logo2.png" alt="Company Logo 2" boxSize="60px" />
+          </HStack>
+
+          {/* Add more logos here */}
+        </Flex>
+      </Box>
+    </Box>
+  )
+}
+
+export default Home
