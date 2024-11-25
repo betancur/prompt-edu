@@ -29,7 +29,6 @@ function Navbar() {
             onClick={toggleColorMode}
             variant="ghost"
           />
-          <Button colorScheme="brand">Sign In</Button>
         </Flex>
       </Flex>
     </Box>

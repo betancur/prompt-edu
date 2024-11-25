@@ -1,7 +1,7 @@
 import { Box, Heading, Text, VStack } from '@chakra-ui/react';
 import * as HeroIcons from '@heroicons/react/24/outline';
 
-function CategoryCard({ title, count, icon }) {
+function CategoryCard({ title, count, icon, onClick }) {
   // Transform the database icon name to PascalCase with "Icon" suffix
   const pascalCaseIconName = icon
     .split('-') // Split on hyphen
@@ -18,6 +18,9 @@ function CategoryCard({ title, count, icon }) {
       borderRadius="md"
       p={4}
       textAlign="center"
+      shadow="sm"
+      _hover={{ shadow: 'md', cursor: 'pointer' }}
+      onClick={onClick} // Llamar a la función al hacer clic
     >
       <VStack spacing={3}>
         {HeroIcon ? (
