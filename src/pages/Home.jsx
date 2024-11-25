@@ -14,22 +14,23 @@ import {
   Spacer
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
-import { supabase } from '../lib/supabaseClient' // Import Supabase client
+import { useNavigate } from 'react-router-dom'
+import { supabase } from '../lib/supabaseClient'
 import PromptOfDay from '../components/PromptOfDay'
-import CategoryCard from '../components/CategoryCard'; // Import the default export
+import CategoryCard from '../components/CategoryCard'
 
 function Home() {
+  const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
-  const [categories, setCategories] = useState([]) // Initialize state for categories
+  const [categories, setCategories] = useState([])
 
-  // Fetch categories from Supabase
   useEffect(() => {
     const fetchCategories = async () => {
       const { data, error } = await supabase.from('categories').select('*');
       if (error) {
         console.error('Error fetching categories:', error);
       } else {
-        console.log('Fetched categories:', data); // Log the fetched data
+        console.log('Fetched categories:', data);
         setCategories(data);
       }
     };
@@ -37,14 +38,20 @@ function Home() {
     fetchCategories();
   }, []);
 
+  const handleCategoryClick = (categoryId, categoryName) => {
+    navigate(`/library?category=${categoryId}`, { 
+      state: { categoryName } 
+    });
+  };
+
   return (
     <Box>
       <Box textAlign="center" mb={12}>
         <Heading size="2xl" mb={4}>
-        Mejore su enseñanza con prompts de IA
+          Mejore su enseñanza con prompts de IA
         </Heading>
         <Text fontSize="xl" color="gray.600" mb={8}>
-        Descubre y crea prompts efectivos para tu aula
+          Descubre y crea prompts efectivos para tu aula
         </Text>
         <Input
           maxW="600px"
@@ -65,7 +72,8 @@ function Home() {
               key={category.id} 
               title={category.name} 
               count={category.description || 'Description not available'}
-              icon={category.icon} 
+              icon={category.icon}
+              onClick={() => handleCategoryClick(category.id, category.name)}
             />
           ))}
         </SimpleGrid>
