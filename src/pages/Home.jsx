@@ -3,18 +3,24 @@ import {
   Heading, 
   Text, 
   Input, 
-  SimpleGrid 
-} from '@chakra-ui/react';
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Importar useNavigate
-import { supabase } from '../lib/supabaseClient'; 
-import PromptOfDay from '../components/PromptOfDay';
-import CategoryCard from '../components/CategoryCard';
+  SimpleGrid, 
+  Card, 
+  CardBody,
+  Button,
+  Image as ChakraImage,
+  Flex,
+  VStack,
+  HStack,
+  Spacer
+} from '@chakra-ui/react'
+import { useState, useEffect } from 'react'
+import { supabase } from '../lib/supabaseClient' // Import Supabase client
+import PromptOfDay from '../components/PromptOfDay'
+import CategoryCard from '../components/CategoryCard'; // Import the default export
 
 function Home() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [categories, setCategories] = useState([]);
-  const navigate = useNavigate(); // Hook para redirigir
+  const [searchQuery, setSearchQuery] = useState('')
+  const [categories, setCategories] = useState([]) // Initialize state for categories
 
   // Fetch categories from Supabase
   useEffect(() => {
@@ -23,7 +29,7 @@ function Home() {
       if (error) {
         console.error('Error fetching categories:', error);
       } else {
-        console.log('Fetched categories:', data);
+        console.log('Fetched categories:', data); // Log the fetched data
         setCategories(data);
       }
     };
@@ -31,19 +37,14 @@ function Home() {
     fetchCategories();
   }, []);
 
-  // Manejar clic en una categoría
-  const handleCategoryClick = (categoryId) => {
-    navigate(`/library?category=${categoryId}`); // Navegar con el ID de la categoría
-  };
-
   return (
     <Box>
       <Box textAlign="center" mb={12}>
         <Heading size="2xl" mb={4}>
-          Mejore su enseñanza con prompts de IA
+        Mejore su enseñanza con prompts de IA
         </Heading>
         <Text fontSize="xl" color="gray.600" mb={8}>
-          Descubre y crea prompts efectivos para tu aula
+        Descubre y crea prompts efectivos para tu aula
         </Text>
         <Input
           maxW="600px"
@@ -64,14 +65,80 @@ function Home() {
               key={category.id} 
               title={category.name} 
               count={category.description || 'Description not available'}
-              icon={category.icon}
-              onClick={() => handleCategoryClick(category.id)} // Redirigir al hacer clic
+              icon={category.icon} 
             />
           ))}
         </SimpleGrid>
       </Box>
+
+      <Box mt={16}>
+        <Heading size="xl" mb={8}>
+          Free AI Resources
+        </Heading>
+        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
+          <Box
+            borderWidth="1px"
+            borderRadius="lg"
+            overflow="hidden"
+            p={4}
+            shadow="sm"
+            _hover={{ shadow: 'md' }}
+          >
+            <Heading size="md" mb={4}>
+              AI in Education Guide
+            </Heading>
+            <Text mb={4}>
+              Download our comprehensive guide on integrating AI into your classroom.
+            </Text>
+            <Button
+              colorScheme="blue"
+              as="a"
+              href="/resources/ai-in-education-guide.pdf"
+              download
+            >
+              Download PDF
+            </Button>
+          </Box>
+          {/* Add more resources here */}
+        </SimpleGrid>
+      </Box>
+
+      <Box mt={16}>
+        <Flex direction="column" align="center">
+          <HStack spacing={8} mb={4}>
+            <Box height="200px" width="auto">
+              <ChakraImage
+                src="/src/resources/Logo-Eafit.png"
+                alt="Universidad Eafit"
+                height="100%"
+                width="auto"
+                objectFit="contain"
+              />
+            </Box>
+            <Box height="200px" width="auto">
+              <ChakraImage
+                src="/src/resources/Logo-GilbertoEcheverri.png"
+                alt="Corporación Gilberto Echeverri Mejia"
+                height="100%"
+                width="auto"
+                objectFit="contain"
+              />
+            </Box>
+            <Box height="200px" width="auto">
+              <ChakraImage
+                src="/src/resources/Logo-Gobernacion.png"
+                alt="Gobernación de Antioquia"
+                height="100%"
+                width="auto"
+                objectFit="contain"
+              />
+            </Box>
+          </HStack>
+          {/* Add more logos here */}
+        </Flex>
+      </Box>
     </Box>
-  );
+  )
 }
 
-export default Home;
+export default Home
