@@ -1,131 +1,147 @@
-import { 
-  Box, 
-  Heading, 
-  SimpleGrid, 
-  Input, 
-  Select, 
-  Flex,
-  Tag,
-  TagLabel,
-  TagCloseButton
-} from '@chakra-ui/react'
-import { useState } from 'react'
-import PromptCard from '../components/PromptCard'
+import { Box, Heading, SimpleGrid, Text, VStack, Input, Select } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabaseClient'; // Import Supabase client
+import PromptCard from '../components/PromptCard'; // Component for individual prompts
 
 function Library() {
-  const [filters, setFilters] = useState({
-    search: '',
-    category: '',
-    sort: 'newest'
-  })
+  const [prompts, setPrompts] = useState([]); // State for storing fetched prompts
+  const [filteredPrompts, setFilteredPrompts] = useState([]); // State for filtered prompts
+  const [categories, setCategories] = useState([]); // State for categories
+  const [searchQuery, setSearchQuery] = useState(''); // State for search input
+  const [selectedCategory, setSelectedCategory] = useState(''); // State for selected category
+  const [error, setError] = useState(null); // State for handling errors
+  const [loading, setLoading] = useState(true); // State for loading
 
-  const prompts = [
-    {
-      id: 1,
-      title: 'Mathematical Word Problem Generator',
-      description: 'Create engaging word problems that incorporate real-world scenarios...',
-      category: 'Math',
-      tags: ['algebra', 'word-problems'],
-      examples: [
-        'Problem 1: A farmer has 5 apples and sells 3. How many apples does he have left?',
-        'Problem 2: If a car travels at 60 mph for 2 hours, how far will it go?'
-      ]
-    },
-    {
-      id: 2,
-      title: 'Science Experiment Idea',
-      description: 'Design an experiment to demonstrate a scientific concept...',
-      category: 'Science',
-      tags: ['experiments', 'science'],
-      examples: [
-        'Experiment 1: Create a simple water cycle using a glass, ice cubes, and a plastic bag.',
-        'Experiment 2: Build a homemade lava lamp using oil, water, Alka-Seltzer, and food coloring.'
-      ]
-    },
-    {
-      id: 3,
-      title: 'Language Arts Story Prompt',
-      description: 'Write a short story that incorporates at least three language arts concepts...',
-      category: 'Language Arts',
-      tags: ['writing', 'language'],
-      examples: [
-        'Story 1: Create a narrative about a character who learns to read.',
-        'Story 2: Write a descriptive paragraph about your favorite place.'
-      ]
-    },
-    {
-      id: 4,
-      title: 'Social Studies Historical Event',
-      description: 'Research and present an important historical event...',
-      category: 'Social Studies',
-      tags: ['history', 'social-studies'],
-      examples: [
-        'Event 1: Discuss the significance of the American Revolution.',
-        'Event 2: Analyze the causes and effects of World War II.'
-      ]
+  // Fetch prompts and categories from Supabase
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+
+      // Fetch prompts
+      const { data: promptsData, error: promptsError } = await supabase
+          .from('prompts')
+          .select('id, title, content, created_at, category_id, categories(name)');
+      if (promptsError) {
+        console.error('Error fetching prompts:', promptsError);
+        setError('Failed to load prompts.');
+      } else {
+        setPrompts(promptsData);
+        setFilteredPrompts(promptsData); // Initialize filtered prompts
+      }
+
+      // Fetch categories
+      const { data: categoriesData, error: categoriesError } = await supabase.from('categories').select('*');
+      if (categoriesError) {
+        console.error('Error fetching categories:', categoriesError);
+        setError('Failed to load categories.');
+      } else {
+        setCategories(categoriesData);
+      }
+
+      setLoading(false);
+    };
+
+    fetchData();
+  }, []);
+
+  // Handle search input changes
+  useEffect(() => {
+    let filtered = prompts;
+  
+    console.log('Selected Category:', selectedCategory); // Debug selected category
+    console.log('Search Query:', searchQuery); // Debug search query
+  
+    if (searchQuery) {
+      filtered = filtered.filter(
+        (prompt) =>
+          prompt.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          prompt.content.toLowerCase().includes(searchQuery.toLowerCase())
+      );
     }
-  ]
-
-  const filteredPrompts = prompts.filter(prompt => {
-    if (filters.search) {
-      return prompt.title.toLowerCase().includes(filters.search.toLowerCase()) ||
-             prompt.description.toLowerCase().includes(filters.search.toLowerCase())
+  
+    if (selectedCategory) {
+      filtered = filtered.filter((prompt) => prompt.category_id === selectedCategory.toString());
+      console.log('Filtered Prompts After Category:', filtered); // Debug filtered prompts
     }
+  
+    setFilteredPrompts(filtered);
+  }, [searchQuery, selectedCategory, prompts]);
 
-    if (filters.category && filters.category !== 'all') {
-      return prompt.category === filters.category
-    }
-
-    return true
-  })
-
-  const sortedPrompts = filteredPrompts.sort((a, b) => {
-    if (filters.sort === 'newest') {
-      return new Date(b.id) - new Date(a.id)
-    } else if (filters.sort === 'popular') {
-      // Assuming popularity is based on the number of examples
-      return b.examples.length - a.examples.length
-    }
-
-    return 0
-  })
+  // Render error message if there’s an issue
+  if (error) {
+    return (
+      <Box textAlign="center" mt={16}>
+        <Text color="red.500" fontSize="lg">
+          {error}
+        </Text>
+      </Box>
+    );
+  }
 
   return (
-    <Box>
-      <Heading mb={8}>Prompt Library</Heading>
-      
-      <Flex gap={4} mb={6}>
+    <Box p={8}>
+      <Heading size="xl" mb={8}>
+        Explore Prompts
+      </Heading>
+
+      {/* Search and Filter */}
+      <Box mb={6} display="flex" gap={4} flexDirection={{ base: 'column', md: 'row' }}>
+        {/* Search Bar */}
         <Input
           placeholder="Search prompts..."
-          value={filters.search}
-          onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          maxW={{ base: '100%', md: '50%' }}
         />
-        <Select
-          value={filters.category}
-          onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value }))}
-        >
-          <option value="">All Categories</option>
-          <option value="math">Math</option>
-          <option value="science">Science</option>
-          <option value="language">Language Arts</option>
-          <option value="social">Social Studies</option>
-        </Select>
-        <Select
-          value={filters.sort}
-          onChange={(e) => setFilters(prev => ({ ...prev, sort: e.target.value }))}
-        >
-          <option value="newest">Newest First</option>
-          <option value="popular">Most Popular</option>
-        </Select>
-      </Flex>
 
-      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
-        {sortedPrompts.map(prompt => (
-          <PromptCard key={prompt.id} {...prompt} />
-        ))}
-      </SimpleGrid>
+        {/* Category Filter */}
+        <Select
+          placeholder="Filter by category"
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          maxW={{ base: '100%', md: '50%' }}
+        >
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+        </Select>
+      </Box>
+
+      {/* Loading */}
+      {loading ? (
+        <Text textAlign="center" color="gray.600">
+          Loading prompts...
+        </Text>
+      ) : filteredPrompts.length === 0 ? (
+        <Text textAlign="center" color="gray.600">
+          No prompts found.
+        </Text>
+      ) : (
+        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
+  {filteredPrompts.map((prompt) => {
+    // Log prompt and category IDs
+    console.log('Prompt category_id:', prompt.category_id);
+    console.log('Categories:', categories);
+
+    // Find the category name using the category_id
+    const categoryName = categories.find((cat) => cat.id === prompt.category_id)?.name || 'Uncategorized';
+
+    return (
+      <PromptCard
+        key={prompt.id}
+        title={prompt.title}
+        content={prompt.content}
+        createdAt={prompt.created_at}
+        category={categoryName} // Pass the category name
+      />
+    );
+  })}
+</SimpleGrid>
+      )}
     </Box>
-  )
+  );
 }
 
-export default Library
+export default Library;

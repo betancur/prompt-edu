@@ -1,41 +1,35 @@
-import { Card, CardBody, Heading, Text, Flex, Box } from '@chakra-ui/react'
-import { Link } from 'react-router-dom'
-import {
-  CalculatorIcon,
-  BeakerIcon,
-  BookOpenIcon,
-  GlobeAmericasIcon
-} from '@heroicons/react/24/solid'
+import { Box, Heading, Text, VStack } from '@chakra-ui/react';
+import * as HeroIcons from '@heroicons/react/24/outline';
 
-const categoryIcons = {
-  Math: CalculatorIcon,
-  Science: BeakerIcon,
-  'Language Arts': BookOpenIcon,
-  'Social Studies': GlobeAmericasIcon
-}
+function CategoryCard({ title, count, icon }) {
+  // Transform the database icon name to PascalCase with "Icon" suffix
+  const pascalCaseIconName = icon
+    .split('-') // Split on hyphen
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1)) // Capitalize each part
+    .join('') + 'Icon'; // Join and add "Icon" suffix
 
-function CategoryCard({ title, count }) {
-  const Icon = categoryIcons[title]
+  // Resolve the Heroicon dynamically
+  const HeroIcon = HeroIcons[pascalCaseIconName];
 
   return (
-    <Card 
-      as={Link} 
-      to={`/library?category=${title.toLowerCase()}`} 
-      _hover={{ transform: 'translateY(-4px)', transition: '0.2s' }}
+    <Box
+      border="1px solid"
+      borderColor="gray.200"
+      borderRadius="md"
+      p={4}
+      textAlign="center"
     >
-      <CardBody>
-        <Flex align="center" gap={4}>
-          <Box color="brand.500">
-            <Icon style={{width: 32, height: 32}} />
-          </Box>
-          <Box>
-            <Heading size="md">{title}</Heading>
-            <Text color="gray.600">{count} prompts</Text>
-          </Box>
-        </Flex>
-      </CardBody>
-    </Card>
-  )
+      <VStack spacing={3}>
+        {HeroIcon ? (
+          <HeroIcon style={{ width: '40px', height: '40px', color: '#4A5568' }} />
+        ) : (
+          <Box fontSize="3xl">❓</Box> // Fallback icon
+        )}
+        <Heading size="md">{title}</Heading>
+        <Text color="gray.500">{count}</Text>
+      </VStack>
+    </Box>
+  );
 }
 
-export default CategoryCard
+export default CategoryCard;

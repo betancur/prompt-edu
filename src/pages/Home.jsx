@@ -13,28 +13,38 @@ import {
   HStack,
   Spacer
 } from '@chakra-ui/react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { supabase } from '../lib/supabaseClient' // Import Supabase client
 import PromptOfDay from '../components/PromptOfDay'
-import CategoryCard from '../components/CategoryCard'
+import CategoryCard from '../components/CategoryCard'; // Import the default export
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState('')
+  const [categories, setCategories] = useState([]) // Initialize state for categories
 
-  const categories = [
-    { title: 'Math', count: 124 },
-    { title: 'Science', count: 98 },
-    { title: 'Language Arts', count: 156 },
-    { title: 'Social Studies', count: 87 }
-  ]
+  // Fetch categories from Supabase
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const { data, error } = await supabase.from('categories').select('*');
+      if (error) {
+        console.error('Error fetching categories:', error);
+      } else {
+        console.log('Fetched categories:', data); // Log the fetched data
+        setCategories(data);
+      }
+    };
+  
+    fetchCategories();
+  }, []);
 
   return (
     <Box>
       <Box textAlign="center" mb={12}>
         <Heading size="2xl" mb={4}>
-          Enhance Your Teaching with AI Prompts
+        Mejore su enseñanza con prompts de IA
         </Heading>
         <Text fontSize="xl" color="gray.600" mb={8}>
-          Discover and create effective prompts for your classroom
+        Descubre y crea prompts efectivos para tu aula
         </Text>
         <Input
           maxW="600px"
@@ -48,10 +58,15 @@ function Home() {
       <PromptOfDay />
 
       <Box mt={16}>
-        <Heading size="xl" mb={8}>Featured Categories</Heading>
+        <Heading size="xl" mb={8}>Categorías destacadas</Heading>
         <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={6}>
           {categories.map(category => (
-            <CategoryCard key={category.title} {...category} />
+            <CategoryCard 
+              key={category.id} 
+              title={category.name} 
+              count={category.description || 'Description not available'}
+              icon={category.icon} 
+            />
           ))}
         </SimpleGrid>
       </Box>
