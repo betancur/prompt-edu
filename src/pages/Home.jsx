@@ -108,7 +108,7 @@ function Home() {
           <HStack spacing={8} mb={4}>
             <Box height="200px" width="auto">
               <ChakraImage
-                src="/src/resources/Logo-Eafit.png"
+                src="/resources/Logo-Eafit.png"
                 alt="Universidad Eafit"
                 height="100%"
                 width="auto"
@@ -117,7 +117,7 @@ function Home() {
             </Box>
             <Box height="200px" width="auto">
               <ChakraImage
-                src="/src/resources/Logo-GilbertoEcheverri.png"
+                src="/resources/Logo-GilbertoEcheverri.png"
                 alt="Corporación Gilberto Echeverri Mejia"
                 height="100%"
                 width="auto"
@@ -126,7 +126,7 @@ function Home() {
             </Box>
             <Box height="200px" width="auto">
               <ChakraImage
-                src="/src/resources/Logo-Gobernacion.png"
+                src="/resources/Logo-Gobernacion.png"
                 alt="Gobernación de Antioquia"
                 height="100%"
                 width="auto"
