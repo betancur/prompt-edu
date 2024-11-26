@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import PromptCard from '../components/PromptCard';
+import { Button } from "@/components/ui/button";
 
 function Library() {
   const [searchParams] = useSearchParams();
@@ -13,6 +14,11 @@ function Library() {
   const [categoryColors, setCategoryColors] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(30);
+  const itemsPerPageOptions = [30, 60, 90];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,6 +79,7 @@ function Library() {
     }
 
     setFilteredPrompts(filtered);
+    setCurrentPage(1); // Reset to first page when filters change
   }, [prompts, searchQuery, selectedCategory]);
 
   useEffect(() => {
@@ -82,6 +89,19 @@ function Library() {
       setSelectedCategory(categoryParam);
     }
   }, [searchParams]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredPrompts.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentPrompts = filteredPrompts.slice(startIndex, endIndex);
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+      window.scrollTo(0, 0);
+    }
+  };
 
   if (loading) {
     return (
@@ -125,26 +145,115 @@ function Library() {
           </select>
         </div>
 
+        {/* Items per page selector */}
+        <div className="flex items-center gap-4">
+          <span className="text-sm text-muted-foreground">Prompts por página:</span>
+          <div className="flex gap-2">
+            {itemsPerPageOptions.map(option => (
+              <Button
+                key={option}
+                variant={itemsPerPage === option ? "default" : "outline"}
+                size="sm"
+                onClick={() => {
+                  setItemsPerPage(option);
+                  setCurrentPage(1);
+                }}
+              >
+                {option}
+              </Button>
+            ))}
+          </div>
+        </div>
+
         {filteredPrompts.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-muted-foreground">No prompts found.</p>
+            <p className="text-muted-foreground">No se encontraron prompts.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredPrompts.map(prompt => {
-              const category = categories.find(cat => cat.id === prompt.category_id);
-              return (
-                <PromptCard
-                  key={prompt.id}
-                  title={prompt.title}
-                  content={prompt.content}
-                  createdAt={prompt.created_at}
-                  category={category?.name || 'Uncategorized'}
-                  categoryColor={category?.color}
-                />
-              );
-            })}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {currentPrompts.map(prompt => {
+                const category = categories.find(cat => cat.id === prompt.category_id);
+                return (
+                  <PromptCard
+                    key={prompt.id}
+                    title={prompt.title}
+                    content={prompt.content}
+                    createdAt={prompt.created_at}
+                    category={category?.name || 'Uncategorized'}
+                    categoryColor={category?.color}
+                  />
+                );
+              })}
+            </div>
+
+            {/* Pagination controls */}
+            <div className="flex justify-center items-center gap-2 mt-8">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                Anterior
+              </Button>
+              
+              <div className="flex items-center gap-2">
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  let pageNumber;
+                  if (totalPages <= 5) {
+                    pageNumber = i + 1;
+                  } else if (currentPage <= 3) {
+                    pageNumber = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    pageNumber = totalPages - 4 + i;
+                  } else {
+                    pageNumber = currentPage - 2 + i;
+                  }
+
+                  if (pageNumber <= totalPages) {
+                    return (
+                      <Button
+                        key={pageNumber}
+                        variant={currentPage === pageNumber ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => handlePageChange(pageNumber)}
+                      >
+                        {pageNumber}
+                      </Button>
+                    );
+                  }
+                  return null;
+                })}
+                
+                {totalPages > 5 && currentPage < totalPages - 2 && (
+                  <>
+                    <span className="mx-1">...</span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handlePageChange(totalPages)}
+                    >
+                      {totalPages}
+                    </Button>
+                  </>
+                )}
+              </div>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Siguiente
+              </Button>
+            </div>
+
+            <div className="text-center text-sm text-muted-foreground mt-4">
+              Mostrando {startIndex + 1}-{Math.min(endIndex, filteredPrompts.length)} de {filteredPrompts.length} prompts
+            </div>
+          </>
         )}
       </div>
     </div>

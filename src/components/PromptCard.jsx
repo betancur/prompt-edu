@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Copy, Share2 } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 import { Card, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -113,8 +114,9 @@ function PromptCard({ title, content, category, createdAt, categoryColor }) {
             </div>
           </DialogHeader>
 
-          <div className="mt-4 space-y-4">
-            <p className="text-gray-700">{content}</p>
+          <div className="mt-4 space-y-4 prose prose-sm dark:prose-invert max-w-none overflow-y-auto max-h-[60vh] pr-2 
+            scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent hover:scrollbar-thumb-gray-400 dark:hover:scrollbar-thumb-gray-500">
+            <ReactMarkdown>{content}</ReactMarkdown>
           </div>
 
           <DialogFooter className="flex justify-end space-x-2 mt-6">
