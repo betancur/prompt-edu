@@ -1,39 +1,28 @@
+import { useState } from 'react';
+import { ClipboardIcon, ShareIcon } from '@heroicons/react/24/outline';
+import { Button } from "@/components/ui/button"
+import { useToast } from "@/components/ui/use-toast"
 import {
-  Box,
-  Heading,
-  Text,
-  Badge,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Flex,
-  IconButton,
-  useDisclosure,
-  useToast,
-} from '@chakra-ui/react';
-import { ClipboardIcon, ShareIcon } from '@heroicons/react/24/outline'; // Importar íconos de Heroicons
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog"
 
 function PromptCard({ title, content, createdAt, category, colorScheme }) {
-  const { isOpen, onOpen, onClose } = useDisclosure(); // Hook para el modal
-  const toast = useToast(); // Para notificaciones
+  const [isOpen, setIsOpen] = useState(false);
+  const { toast } = useToast();
 
-  // Manejar la copia del contenido
   const handleCopy = () => {
     navigator.clipboard.writeText(content);
     toast({
       title: 'Contenido copiado',
       description: 'El contenido del prompt ha sido copiado al portapapeles.',
-      status: 'success',
       duration: 3000,
-      isClosable: true,
     });
   };
 
-  // Manejar compartir
   const handleShare = async () => {
     if (navigator.share) {
       try {
@@ -44,94 +33,91 @@ function PromptCard({ title, content, createdAt, category, colorScheme }) {
         toast({
           title: 'Prompt compartido',
           description: 'El prompt se ha compartido exitosamente.',
-          status: 'success',
           duration: 3000,
-          isClosable: true,
         });
       } catch (error) {
         toast({
           title: 'Error al compartir',
           description: 'No se pudo compartir el prompt.',
-          status: 'error',
+          variant: "destructive",
           duration: 3000,
-          isClosable: true,
         });
       }
     } else {
       toast({
         title: 'Función no disponible',
         description: 'Tu navegador no soporta la funcionalidad de compartir.',
-        status: 'info',
+        variant: "destructive",
         duration: 3000,
-        isClosable: true,
       });
     }
   };
 
   return (
     <>
-      {/* Tarjeta inicial */}
-      <Box
-        border="1px solid"
-        borderColor="gray.200"
-        borderRadius="md"
-        p={4}
-        shadow="sm"
-        _hover={{ shadow: 'md' }}
-        cursor="pointer"
-        onClick={onOpen} // Abrir el modal al hacer clic
+      <div
+        className="border rounded-md p-4 shadow-sm hover:shadow-md cursor-pointer bg-card"
+        onClick={() => setIsOpen(true)}
       >
-        <Badge colorScheme={colorScheme} mb={2}>
+        <span className={`inline-block rounded-full px-2 py-1 text-xs font-semibold mb-2 bg-primary/10 text-primary`}>
           {category}
-        </Badge>
-        <Heading size="md" mb={2}>
+        </span>
+        <h3 className="text-lg font-semibold mb-2">
           {title}
-        </Heading>
-        <Text color="gray.500" fontSize="sm">
+        </h3>
+        <p className="text-sm text-muted-foreground">
           {new Date(createdAt).toLocaleDateString()}
-        </Text>
-      </Box>
+        </p>
+      </div>
 
-      {/* Modal para mostrar la información completa */}
-      <Modal isOpen={isOpen} onClose={onClose} size="lg">
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>
-            <Flex justifyContent="space-between" alignItems="center">
-              <Badge colorScheme={colorScheme}>{category}</Badge>
-              <Heading size="md">{title}</Heading>
-            </Flex>
-          </ModalHeader>
-          <ModalBody>
-            <Text color="gray.500" fontSize="sm" mb={4}>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <div className="flex items-center justify-between">
+              <span className={`inline-block rounded-full px-2 py-1 text-xs font-semibold bg-primary/10 text-primary`}>
+                {category}
+              </span>
+              <DialogTitle>{title}</DialogTitle>
+            </div>
+          </DialogHeader>
+          
+          <div className="py-4">
+            <p className="text-sm text-muted-foreground mb-4">
               Fecha: {new Date(createdAt).toLocaleDateString()}
-            </Text>
-            <Text>{content}</Text>
-          </ModalBody>
-          <ModalFooter>
-            <Flex gap={4} flexWrap="wrap">
-              {/* Botón para copiar */}
-              <IconButton
-                icon={<ClipboardIcon style={{ width: 20, height: 20 }} />}
-                colorScheme="blue"
-                aria-label="Copiar contenido"
+            </p>
+            <p className="text-foreground">
+              {content}
+            </p>
+          </div>
+
+          <DialogFooter>
+            <div className="flex gap-4">
+              <Button
+                variant="outline"
+                size="icon"
                 onClick={handleCopy}
-              />
-              {/* Botón para compartir */}
-              <IconButton
-                icon={<ShareIcon style={{ width: 20, height: 20 }} />}
-                colorScheme="green"
-                aria-label="Compartir contenido"
+              >
+                <ClipboardIcon className="h-4 w-4" />
+                <span className="sr-only">Copiar contenido</span>
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
                 onClick={handleShare}
-              />
-              {/* Botón para cerrar */}
-              <Button variant="ghost" onClick={onClose}>
+              >
+                <ShareIcon className="h-4 w-4" />
+                <span className="sr-only">Compartir contenido</span>
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setIsOpen(false)}
+              >
                 Cerrar
               </Button>
-            </Flex>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

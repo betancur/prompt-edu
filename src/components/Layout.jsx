@@ -1,17 +1,14 @@
-import { Box, useColorMode } from '@chakra-ui/react'
 import { Outlet } from 'react-router-dom'
 import Navbar from './Navbar'
 
 function Layout() {
-  const { colorMode } = useColorMode()
-
   return (
-    <Box minH="100vh" bg={colorMode === 'light' ? 'gray.50' : 'gray.800'}>
+    <div className="min-h-screen bg-background">
       <Navbar />
-      <Box as="main" maxW="1200px" mx="auto" px={4} py={8}>
+      <main className="container mx-auto px-4 py-8 max-w-[1200px]">
         <Outlet />
-      </Box>
-    </Box>
+      </main>
+    </div>
   )
 }
 

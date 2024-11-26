@@ -1,13 +1,9 @@
 import { 
-  Box, 
-  Heading, 
-  Accordion, 
-  AccordionItem, 
-  AccordionButton, 
-  AccordionPanel,
-  AccordionIcon,
-  Text
-} from '@chakra-ui/react'
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
 
 function Frameworks() {
   const frameworks = [
@@ -32,35 +28,32 @@ function Frameworks() {
   ]
 
   return (
-    <Box>
-      <Heading mb={8}>Prompt Engineering Frameworks</Heading>
+    <div className="container mx-auto py-8 px-4">
+      <h1 className="text-3xl font-bold mb-8">Prompt Engineering Frameworks</h1>
       
-      <Accordion allowMultiple>
+      <Accordion type="multiple" className="w-full">
         {frameworks.map(framework => (
-          <AccordionItem key={framework.name}>
-            <AccordionButton>
-              <Box flex="1" textAlign="left">
-                <Heading size="md">{framework.name}</Heading>
-              </Box>
-              <AccordionIcon />
-            </AccordionButton>
-            <AccordionPanel>
-              <Text mb={4}>{framework.description}</Text>
+          <AccordionItem key={framework.name} value={framework.name}>
+            <AccordionTrigger className="text-xl font-semibold">
+              {framework.name}
+            </AccordionTrigger>
+            <AccordionContent>
+              <p className="mb-4 text-muted-foreground">{framework.description}</p>
               
-              <Heading size="sm" mb={2}>Examples</Heading>
+              <h3 className="text-lg font-semibold mb-2">Examples</h3>
               {framework.examples.map((example, i) => (
-                <Text key={i} mb={2}>{example}</Text>
+                <p key={i} className="mb-2">{example}</p>
               ))}
               
-              <Heading size="sm" mt={4} mb={2}>Tips</Heading>
+              <h3 className="text-lg font-semibold mt-4 mb-2">Tips</h3>
               {framework.tips.map((tip, i) => (
-                <Text key={i} mb={2}>{tip}</Text>
+                <p key={i} className="mb-2">{tip}</p>
               ))}
-            </AccordionPanel>
+            </AccordionContent>
           </AccordionItem>
         ))}
       </Accordion>
-    </Box>
+    </div>
   )
 }
 

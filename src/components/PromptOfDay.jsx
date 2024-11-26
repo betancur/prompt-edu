@@ -1,4 +1,3 @@
-import { Box, Heading, Text, Badge, Spinner } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 
@@ -35,39 +34,32 @@ function PromptOfDay() {
 
   if (loading) {
     return (
-      <Box textAlign="center" py={12}>
-        <Spinner size="lg" />
-      </Box>
+      <div className="text-center py-12">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent mx-auto"></div>
+      </div>
     );
   }
 
   if (!prompt) {
     return (
-      <Box textAlign="center" py={12}>
-        <Text>No se encontró ningún prompt.</Text>
-      </Box>
+      <div className="text-center py-12">
+        <p>No se encontró ningún prompt.</p>
+      </div>
     );
   }
 
   return (
-    <Box
-      border="1px solid"
-      borderColor="gray.200"
-      borderRadius="md"
-      p={6}
-      shadow="sm"
-      bg="white"
-    >
-      <Badge colorScheme="blue" mb={4}>
+    <div className="border rounded-md p-6 shadow-sm bg-card">
+      <span className="inline-block bg-primary/10 text-primary rounded-full px-3 py-1 text-sm font-medium mb-4">
         {prompt.categories.name}
-      </Badge>
-      <Heading size="md" mb={4}>
+      </span>
+      <h3 className="text-xl font-semibold mb-4">
         {prompt.title}
-      </Heading>
-      <Text color="gray.700" mb={4}>
+      </h3>
+      <p className="text-muted-foreground mb-4">
         {prompt.content}
-      </Text>
-    </Box>
+      </p>
+    </div>
   );
 }
 

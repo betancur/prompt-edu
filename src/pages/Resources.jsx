@@ -1,12 +1,4 @@
-import { 
-  Box, 
-  Heading, 
-  Text,
-  SimpleGrid,
-  Card,
-  CardBody,
-  Button
-} from '@chakra-ui/react'
+import { Button } from "@/components/ui/button"
 
 function Resources() {
   const resources = [
@@ -19,23 +11,28 @@ function Resources() {
   ]
 
   return (
-    <Box>
-      <Heading mb={8}>Free AI Resources</Heading>
+    <div>
+      <h1 className="text-3xl font-bold mb-8">Free AI Resources</h1>
 
-      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {resources.map(resource => (
-          <Card key={resource.title}>
-            <CardBody>
-              <Heading size="md">{resource.title}</Heading>
-              <Text>{resource.description}</Text>
-              <Button colorScheme="brand" mt={4} as="a" href={resource.file} download>
-                Download PDF
+          <div 
+            key={resource.title}
+            className="rounded-lg border bg-card text-card-foreground shadow-sm"
+          >
+            <div className="p-6 flex flex-col space-y-4">
+              <h3 className="text-xl font-semibold">{resource.title}</h3>
+              <p className="text-muted-foreground">{resource.description}</p>
+              <Button asChild>
+                <a href={resource.file} download>
+                  Download PDF
+                </a>
               </Button>
-            </CardBody>
-          </Card>
+            </div>
+          </div>
         ))}
-      </SimpleGrid>
-    </Box>
+      </div>
+    </div>
   )
 }
 

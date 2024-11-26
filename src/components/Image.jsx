@@ -1,8 +1,6 @@
-import { Image as ChakraImage } from '@chakra-ui/react'
-
 function Image({ src, alt }) {
   return (
-    <ChakraImage src={src} alt={alt} width="100%" height="auto" />
+    <img src={src} alt={alt} className="w-full h-auto" />
   )
 }
 

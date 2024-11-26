@@ -1,37 +1,42 @@
-import { 
-  Box, 
-  Flex, 
-  Button, 
-  useColorMode, 
-  IconButton,
-  Link as ChakraLink
-} from '@chakra-ui/react'
+import React from 'react'
 import { Link } from 'react-router-dom'
+import { Button } from '@/components/ui/button'
 import { SunIcon, MoonIcon } from '@heroicons/react/24/solid'
 
 function Navbar() {
-  const { colorMode, toggleColorMode } = useColorMode()
+  const [theme, setTheme] = React.useState('light')
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light'
+    setTheme(newTheme)
+    document.documentElement.classList.toggle('dark')
+  }
 
   return (
-    <Box as="nav" py={4} px={8} borderBottom="1px" borderColor="gray.200">
-      <Flex maxW="1200px" mx="auto" justify="space-between" align="center">
-        <Flex gap={8}>
-          <ChakraLink as={Link} to="/" fontSize="xl" fontWeight="bold">
+    <nav className="border-b py-4 px-8">
+      <div className="container mx-auto max-w-[1200px] flex justify-between items-center">
+        <div className="flex gap-8">
+          <Link to="/" className="text-xl font-bold hover:text-primary">
             PromptEd
-          </ChakraLink>
-          <ChakraLink as={Link} to="/library">Library</ChakraLink>
-          <ChakraLink as={Link} to="/frameworks">Frameworks</ChakraLink>
-          <ChakraLink as={Link} to="/resources">Resources</ChakraLink>
-        </Flex>
-        <Flex gap={4}>
-          <IconButton
-            icon={colorMode === 'light' ? <MoonIcon style={{width: 20}} /> : <SunIcon style={{width: 20}} />}
-            onClick={toggleColorMode}
+          </Link>
+          <Link to="/library" className="hover:text-primary">Library</Link>
+          <Link to="/frameworks" className="hover:text-primary">Frameworks</Link>
+          <Link to="/resources" className="hover:text-primary">Resources</Link>
+        </div>
+        <div className="flex gap-4">
+          <Button
             variant="ghost"
-          />
-        </Flex>
-      </Flex>
-    </Box>
+            size="icon"
+            onClick={toggleTheme}
+          >
+            {theme === 'light' ? 
+              <MoonIcon className="h-5 w-5" /> : 
+              <SunIcon className="h-5 w-5" />
+            }
+          </Button>
+        </div>
+      </div>
+    </nav>
   )
 }
 

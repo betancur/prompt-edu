@@ -1,4 +1,3 @@
-import { Box, Heading, Text, VStack } from '@chakra-ui/react';
 import * as HeroIcons from '@heroicons/react/24/outline';
 
 function CategoryCard({ title, count, icon, onClick }) {
@@ -12,26 +11,20 @@ function CategoryCard({ title, count, icon, onClick }) {
   const HeroIcon = HeroIcons[pascalCaseIconName];
 
   return (
-    <Box
-      border="1px solid"
-      borderColor="gray.200"
-      borderRadius="md"
-      p={4}
-      textAlign="center"
-      shadow="sm"
-      _hover={{ shadow: 'md', cursor: 'pointer' }}
-      onClick={onClick} // Llamar a la función al hacer clic
+    <div
+      className="border rounded-md p-4 text-center shadow-sm hover:shadow-md cursor-pointer transition-shadow"
+      onClick={onClick}
     >
-      <VStack spacing={3}>
+      <div className="flex flex-col items-center space-y-3">
         {HeroIcon ? (
-          <HeroIcon style={{ width: '40px', height: '40px', color: '#4A5568' }} />
+          <HeroIcon className="w-10 h-10 text-gray-600" />
         ) : (
-          <Box fontSize="3xl">❓</Box> // Fallback icon
+          <div className="text-3xl">❓</div> // Fallback icon
         )}
-        <Heading size="md">{title}</Heading>
-        <Text color="gray.500">{count}</Text>
-      </VStack>
-    </Box>
+        <h3 className="text-lg font-semibold">{title}</h3>
+        <p className="text-muted-foreground">{count}</p>
+      </div>
+    </div>
   );
 }
 

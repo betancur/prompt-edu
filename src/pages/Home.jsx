@@ -1,21 +1,7 @@
-import { 
-  Box, 
-  Heading, 
-  Text, 
-  Input, 
-  SimpleGrid, 
-  Card, 
-  CardBody,
-  Button,
-  Image as ChakraImage,
-  Flex,
-  VStack,
-  HStack,
-  Spacer
-} from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
+import { Button } from '@/components/ui/button'
 import PromptOfDay from '../components/PromptOfDay'
 import CategoryCard from '../components/CategoryCard'
 
@@ -45,28 +31,27 @@ function Home() {
   };
 
   return (
-    <Box>
-      <Box textAlign="center" mb={12}>
-        <Heading size="2xl" mb={4}>
+    <div>
+      <div className="text-center mb-12">
+        <h1 className="text-4xl font-bold mb-4">
           Mejore su enseñanza con prompts de IA
-        </Heading>
-        <Text fontSize="xl" color="gray.600" mb={8}>
+        </h1>
+        <p className="text-xl text-muted-foreground mb-8">
           Descubre y crea prompts efectivos para tu aula
-        </Text>
-        <Input
-          maxW="600px"
+        </p>
+        <input
+          className="max-w-[600px] w-full px-4 py-2 rounded-md border bg-background"
           placeholder="Search prompts..."
-          size="lg"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-      </Box>
+      </div>
 
       <PromptOfDay />
 
-      <Box mt={16}>
-        <Heading size="xl" mb={8}>Categorías destacadas</Heading>
-        <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={6}>
+      <div className="mt-16">
+        <h2 className="text-3xl font-bold mb-8">Categorías destacadas</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {categories.map(category => (
             <CategoryCard 
               key={category.id} 
@@ -76,76 +61,63 @@ function Home() {
               onClick={() => handleCategoryClick(category.id, category.name)}
             />
           ))}
-        </SimpleGrid>
-      </Box>
+        </div>
+      </div>
 
-      <Box mt={16}>
-        <Heading size="xl" mb={8}>
+      <div className="mt-16">
+        <h2 className="text-3xl font-bold mb-8">
           Free AI Resources
-        </Heading>
-        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
-          <Box
-            borderWidth="1px"
-            borderRadius="lg"
-            overflow="hidden"
-            p={4}
-            shadow="sm"
-            _hover={{ shadow: 'md' }}
-          >
-            <Heading size="md" mb={4}>
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+            <h3 className="text-xl font-bold mb-4">
               AI in Education Guide
-            </Heading>
-            <Text mb={4}>
+            </h3>
+            <p className="mb-4">
               Download our comprehensive guide on integrating AI into your classroom.
-            </Text>
+            </p>
             <Button
-              colorScheme="blue"
-              as="a"
-              href="/resources/ai-in-education-guide.pdf"
-              download
+              asChild
+              className="w-full"
             >
-              Download PDF
+              <a href="/resources/ai-in-education-guide.pdf" download>
+                Download PDF
+              </a>
             </Button>
-          </Box>
+          </div>
           {/* Add more resources here */}
-        </SimpleGrid>
-      </Box>
+        </div>
+      </div>
 
-      <Box mt={16}>
-        <Flex direction="column" align="center">
-          <HStack spacing={8} mb={4}>
-            <Box height="200px" width="auto">
-              <ChakraImage
+      <div className="mt-16">
+        <div className="flex flex-col items-center">
+          <div className="flex gap-8 mb-4">
+            <div className="h-[200px]">
+              <img
                 src="/resources/Logo-Eafit.png"
                 alt="Universidad Eafit"
-                height="100%"
-                width="auto"
-                objectFit="contain"
+                className="h-full w-auto object-contain"
               />
-            </Box>
-            <Box height="200px" width="auto">
-              <ChakraImage
+            </div>
+            <div className="h-[200px]">
+              <img
                 src="/resources/Logo-GilbertoEcheverri.png"
                 alt="Corporación Gilberto Echeverri Mejia"
-                height="100%"
-                width="auto"
-                objectFit="contain"
+                className="h-full w-auto object-contain"
               />
-            </Box>
-            <Box height="200px" width="auto">
-              <ChakraImage
+            </div>
+            <div className="h-[200px]">
+              <img
                 src="/resources/Logo-Gobernacion.png"
                 alt="Gobernación de Antioquia"
-                height="100%"
-                width="auto"
-                objectFit="contain"
+                className="h-full w-auto object-contain"
               />
-            </Box>
-          </HStack>
+            </div>
+          </div>
           {/* Add more logos here */}
-        </Flex>
-      </Box>
-    </Box>
+        </div>
+      </div>
+    </div>
   )
 }
 
