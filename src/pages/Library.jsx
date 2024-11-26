@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
+import { Star } from 'lucide-react';
 import PromptCard from '../components/PromptCard';
 import { Button } from "@/components/ui/button";
 
@@ -8,6 +9,7 @@ function Library() {
   const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [showFavorites, setShowFavorites] = useState(false);
   const [prompts, setPrompts] = useState([]);
   const [filteredPrompts, setFilteredPrompts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -32,6 +34,13 @@ function Library() {
         
         if (promptsError) throw promptsError;
         
+        // Sort prompts by creation date (newest first)
+        const sortedPrompts = promptsData?.sort((a, b) => 
+          new Date(b.created_at) - new Date(a.created_at)
+        ) || [];
+
+        setPrompts(sortedPrompts);
+        
         // Fetch categories
         const { data: categoriesData, error: categoriesError } = await supabase
           .from('categories')
@@ -39,7 +48,6 @@ function Library() {
         
         if (categoriesError) throw categoriesError;
 
-        setPrompts(promptsData || []);
         setCategories(categoriesData || []);
         
         // Set colors for categories
@@ -60,9 +68,14 @@ function Library() {
     fetchData();
   }, []);
 
-  // Filter prompts based on search query and selected category
+  // Filter prompts based on search query, selected category, and favorites
   useEffect(() => {
     let filtered = [...prompts];
+    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+
+    if (showFavorites) {
+      filtered = filtered.filter(prompt => favorites.includes(prompt.id));
+    }
 
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase().trim();
@@ -80,7 +93,7 @@ function Library() {
 
     setFilteredPrompts(filtered);
     setCurrentPage(1); // Reset to first page when filters change
-  }, [prompts, searchQuery, selectedCategory]);
+  }, [prompts, searchQuery, selectedCategory, showFavorites]);
 
   useEffect(() => {
     const queryParams = new URLSearchParams(searchParams);
@@ -100,6 +113,12 @@ function Library() {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
       window.scrollTo(0, 0);
+    }
+  };
+
+  const handleFavoriteChange = (promptId, isFavorite) => {
+    if (showFavorites && !isFavorite) {
+      setFilteredPrompts(prev => prev.filter(p => p.id !== promptId));
     }
   };
 
@@ -143,6 +162,14 @@ function Library() {
               </option>
             ))}
           </select>
+          <Button
+            variant={showFavorites ? "default" : "outline"}
+            className="w-full md:w-auto flex items-center gap-2"
+            onClick={() => setShowFavorites(!showFavorites)}
+          >
+            <Star className={`h-4 w-4 ${showFavorites ? 'fill-white' : ''}`} />
+            Favoritos
+          </Button>
         </div>
 
         {/* Items per page selector */}
@@ -167,7 +194,11 @@ function Library() {
 
         {filteredPrompts.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-muted-foreground">No se encontraron prompts.</p>
+            <p className="text-muted-foreground">
+              {showFavorites 
+                ? "No tienes prompts favoritos."
+                : "No se encontraron prompts."}
+            </p>
           </div>
         ) : (
           <>
@@ -177,11 +208,13 @@ function Library() {
                 return (
                   <PromptCard
                     key={prompt.id}
+                    id={prompt.id}
                     title={prompt.title}
                     content={prompt.content}
                     createdAt={prompt.created_at}
                     category={category?.name || 'Uncategorized'}
                     categoryColor={category?.color}
+                    onFavoriteChange={handleFavoriteChange}
                   />
                 );
               })}

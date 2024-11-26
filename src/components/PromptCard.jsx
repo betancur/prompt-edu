@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Copy, Share2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Copy, Share2, Star } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { Card, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,11 +12,18 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
 
-function PromptCard({ title, content, category, createdAt, categoryColor }) {
+function PromptCard({ id, title, content, category, createdAt, categoryColor, onFavoriteChange }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
   const { toast } = useToast();
 
-  const handleCopy = async () => {
+  useEffect(() => {
+    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    setIsFavorite(favorites.includes(id));
+  }, [id]);
+
+  const handleCopy = async (e) => {
+    e.stopPropagation();
     try {
       await navigator.clipboard.writeText(content);
       toast({
@@ -32,7 +39,8 @@ function PromptCard({ title, content, category, createdAt, categoryColor }) {
     }
   };
 
-  const handleShare = async () => {
+  const handleShare = async (e) => {
+    e.stopPropagation();
     try {
       await navigator.share({
         title: title,
@@ -53,6 +61,32 @@ function PromptCard({ title, content, category, createdAt, categoryColor }) {
     }
   };
 
+  const toggleFavorite = (e) => {
+    e.stopPropagation();
+    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    let newFavorites;
+    
+    if (isFavorite) {
+      newFavorites = favorites.filter(favId => favId !== id);
+      toast({
+        title: "Eliminado de favoritos",
+        description: "El prompt ha sido eliminado de tus favoritos.",
+      });
+    } else {
+      newFavorites = [...favorites, id];
+      toast({
+        title: "Añadido a favoritos",
+        description: "El prompt ha sido añadido a tus favoritos.",
+      });
+    }
+    
+    localStorage.setItem('favorites', JSON.stringify(newFavorites));
+    setIsFavorite(!isFavorite);
+    if (onFavoriteChange) {
+      onFavoriteChange(id, !isFavorite);
+    }
+  };
+
   const getBadgeStyle = (color) => {
     if (!color) return {};
     return {
@@ -65,9 +99,18 @@ function PromptCard({ title, content, category, createdAt, categoryColor }) {
   return (
     <>
       <Card 
-        className="cursor-pointer hover:shadow-md transition-shadow"
+        className="cursor-pointer hover:shadow-md transition-shadow relative"
         onClick={() => setIsOpen(true)}
       >
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute top-2 right-2 z-10"
+          onClick={toggleFavorite}
+        >
+          <Star className={`h-4 w-4 ${isFavorite ? 'fill-yellow-400 text-yellow-400' : 'text-gray-400'}`} />
+        </Button>
+
         <CardHeader className="space-y-2">
           <div className="flex items-center justify-between">
             <Badge 
@@ -77,7 +120,7 @@ function PromptCard({ title, content, category, createdAt, categoryColor }) {
             >
               {category}
             </Badge>
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-gray-500 mr-8">
               {new Date(createdAt).toLocaleDateString()}
             </span>
           </div>
@@ -104,9 +147,18 @@ function PromptCard({ title, content, category, createdAt, categoryColor }) {
               >
                 {category}
               </Badge>
-              <span className="text-sm text-gray-500">
-                {new Date(createdAt).toLocaleDateString()}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-500">
+                  {new Date(createdAt).toLocaleDateString()}
+                </span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={toggleFavorite}
+                >
+                  <Star className={`h-4 w-4 ${isFavorite ? 'fill-yellow-400 text-yellow-400' : 'text-gray-400'}`} />
+                </Button>
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <span style={{ color: categoryColor }} className="text-xl font-semibold">//</span>
