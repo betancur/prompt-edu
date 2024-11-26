@@ -1,18 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import { Badge } from "@/components/ui/badge";
 
 function PromptOfDay() {
   const [prompt, setPrompt] = useState(null); // Estado para el prompt aleatorio
   const [loading, setLoading] = useState(true); // Estado de carga
+  const hasFetched = useRef(false);
 
   useEffect(() => {
     const fetchRandomPrompt = async () => {
+      if (hasFetched.current) return;
       setLoading(true);
 
       // Obtener todos los prompts con su categoría
       const { data: prompts, error } = await supabase
         .from('prompts')
-        .select('*, categories(name)');
+        .select('*, categories(name, color)');
       
       if (error) {
         console.error('Error fetching prompts:', error);
@@ -27,10 +30,24 @@ function PromptOfDay() {
       }
 
       setLoading(false);
+      hasFetched.current = true;
     };
 
     fetchRandomPrompt();
+
+    return () => {
+      hasFetched.current = false;
+    };
   }, []);
+
+  const getBadgeStyle = (color) => {
+    if (!color) return {};
+    return {
+      backgroundColor: color,
+      color: '#FFFFFF',
+      borderColor: 'transparent'
+    };
+  };
 
   if (loading) {
     return (
@@ -50,9 +67,13 @@ function PromptOfDay() {
 
   return (
     <div className="border rounded-md p-6 shadow-sm bg-card">
-      <span className="inline-block bg-primary/10 text-primary rounded-full px-3 py-1 text-sm font-medium mb-4">
+      <Badge 
+        variant="outline"
+        style={getBadgeStyle(prompt.categories.color)}
+        className="mb-4"
+      >
         {prompt.categories.name}
-      </span>
+      </Badge>
       <h3 className="text-xl font-semibold mb-4">
         {prompt.title}
       </h3>

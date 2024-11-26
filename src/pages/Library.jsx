@@ -1,27 +1,18 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import PromptCard from '../components/PromptCard';
 
 function Library() {
+  const [searchParams] = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [prompts, setPrompts] = useState([]);
   const [filteredPrompts, setFilteredPrompts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [categoryColors, setCategoryColors] = useState({});
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  const location = useLocation();
-
-  useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const categoryParam = queryParams.get('category');
-    if (categoryParam) {
-      setSelectedCategory(categoryParam);
-    }
-  }, [location]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -84,6 +75,14 @@ function Library() {
     setFilteredPrompts(filtered);
   }, [prompts, searchQuery, selectedCategory]);
 
+  useEffect(() => {
+    const queryParams = new URLSearchParams(searchParams);
+    const categoryParam = queryParams.get('category');
+    if (categoryParam) {
+      setSelectedCategory(categoryParam);
+    }
+  }, [searchParams]);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[200px]">
@@ -107,7 +106,7 @@ function Library() {
         <div className="flex flex-col md:flex-row gap-4">
           <input
             type="text"
-            placeholder="Search prompts..."
+            placeholder="Buscar prompts..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -117,7 +116,7 @@ function Library() {
             onChange={(e) => setSelectedCategory(e.target.value)}
             className="flex h-10 w-full md:w-[200px] rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <option value="all">All Categories</option>
+            <option value="all">Todas las Categorias</option>
             {categories.map(category => (
               <option key={category.id} value={String(category.id)}>
                 {category.name}

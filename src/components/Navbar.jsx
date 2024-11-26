@@ -19,9 +19,9 @@ function Navbar() {
           <Link to="/" className="text-xl font-bold hover:text-primary">
             PromptEd
           </Link>
-          <Link to="/library" className="hover:text-primary">Library</Link>
+          <Link to="/library" className="hover:text-primary">Biblioteca</Link>
           <Link to="/frameworks" className="hover:text-primary">Frameworks</Link>
-          <Link to="/resources" className="hover:text-primary">Resources</Link>
+          <Link to="/resources" className="hover:text-primary">Recursos</Link>
         </div>
         <div className="flex gap-4">
           <Button

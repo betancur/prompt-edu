@@ -30,6 +30,12 @@ function Home() {
     });
   };
 
+  const handleSearch = (e) => {
+    if (e.key === 'Enter' && searchQuery.trim()) {
+      navigate(`/library?search=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
   return (
     <div>
       <div className="text-center mb-12">
@@ -41,9 +47,10 @@ function Home() {
         </p>
         <input
           className="max-w-[600px] w-full px-4 py-2 rounded-md border bg-background"
-          placeholder="Search prompts..."
+          placeholder="Buscar prompts..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={handleSearch}
         />
       </div>
 
