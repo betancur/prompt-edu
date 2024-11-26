@@ -123,35 +123,6 @@ function Home() {
           {/* Add more resources here */}
         </div>
       </div>
-
-      <div className="mt-16">
-        <div className="flex flex-col items-center">
-          <div className="flex gap-8 mb-4">
-            <div className="h-[200px]">
-              <img
-                src="/resources/Logo-Eafit.png"
-                alt="Universidad Eafit"
-                className="h-full w-auto object-contain"
-              />
-            </div>
-            <div className="h-[200px]">
-              <img
-                src="/resources/Logo-GilbertoEcheverri.png"
-                alt="Corporación Gilberto Echeverri Mejia"
-                className="h-full w-auto object-contain"
-              />
-            </div>
-            <div className="h-[200px]">
-              <img
-                src="/resources/Logo-Gobernacion.png"
-                alt="Gobernación de Antioquia"
-                className="h-full w-auto object-contain"
-              />
-            </div>
-          </div>
-          {/* Add more logos here */}
-        </div>
-      </div>
     </div>
   );
 }
