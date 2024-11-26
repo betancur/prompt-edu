@@ -51,12 +51,12 @@ function Home() {
 
   return (
     <div>
-      <div className="w-full m-0 px-8 py-20 bg-[#9DC941] -mt-[1px]">
+      <div className="w-full m-0 px-8 py-12 -mt-[1px]">
         <div className="text-center w-full max-w-full m-0 p-0">
-          <h1 className="text-5xl font-extrabold font-jost text-white mb-4 leading-tight">
+          <h1 className="text-5xl font-extrabold font-jost text-gray-900 mb-4 leading-tight">
             Mejore su enseñanza con prompts de IA
           </h1>
-          <p className="text-2xl text-white font-light font-jost mb-8">
+          <p className="text-2xl text-gray-600 font-light font-jost mb-8">
             Descubre y crea prompts efectivos para tu aula
           </p>
           <div className="max-w-[600px] mx-auto">

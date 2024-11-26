@@ -139,8 +139,12 @@ function Library() {
   }
 
   return (
-    <div>
-      <h1 className="text-4xl font-bold font-jost mb-8">Biblioteca de Prompts</h1>
+    <div className="container mx-auto max-w-[1200px] py-12">
+      <h1 className="text-4xl font-bold font-jost mb-4">Biblioteca de Prompts</h1>
+      <p className="text-xl text-muted-foreground mb-8">
+        Explora y descubre prompts educativos efectivos
+      </p>
+
       <div className="flex flex-col space-y-8">
         <div className="flex flex-col md:flex-row gap-4">
           <input

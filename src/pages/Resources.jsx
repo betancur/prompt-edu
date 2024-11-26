@@ -11,8 +11,11 @@ function Resources() {
   ]
 
   return (
-    <div>
-      <h1 className="text-4xl font-bold font-jost mb-8">Recursos Gratuitos</h1>
+    <div className="container mx-auto max-w-[1200px] py-12">
+      <h1 className="text-4xl font-bold font-jost mb-4">Recursos Gratuitos</h1>
+      <p className="text-xl text-muted-foreground mb-8">
+        Descarga recursos útiles para mejorar tu enseñanza con IA
+      </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {resources.map(resource => (
