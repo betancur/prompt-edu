@@ -51,25 +51,31 @@ function Home() {
 
   return (
     <div>
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold font-jost mb-4">
-          Mejore su enseñanza con prompts de IA
-        </h1>
-        <p className="text-xl text-muted-foreground mb-8">
-          Descubre y crea prompts efectivos para tu aula
-        </p>
-        <input
-          className="max-w-[600px] w-full px-4 py-2 rounded-md border bg-background"
-          placeholder="Buscar prompts..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={handleSearch}
-        />
+      <div className="w-full m-0 px-8 py-20 bg-[#9DC941] -mt-[1px]">
+        <div className="text-center w-full max-w-full m-0 p-0">
+          <h1 className="text-5xl font-extrabold font-jost text-white mb-4 leading-tight">
+            Mejore su enseñanza con prompts de IA
+          </h1>
+          <p className="text-2xl text-white font-light font-jost mb-8">
+            Descubre y crea prompts efectivos para tu aula
+          </p>
+          <div className="max-w-[600px] mx-auto">
+            <input
+              className="w-full px-4 py-3 rounded-lg border bg-white/95 text-gray-800 placeholder-gray-500"
+              placeholder="Buscar prompts..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleSearch}
+            />
+          </div>
+        </div>
       </div>
 
-      <PromptOfDay />
+      <div className="mt-12">
+        <PromptOfDay />
+      </div>
 
-      <div className="mt-16">
+      <div className="mt-12">
         <h2 className="text-3xl font-bold mb-8">Categorías destacadas</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {categories.map(category => {
@@ -94,7 +100,7 @@ function Home() {
                   </div>
                 </CardHeader>
                 <div className="mt-4 pt-4 border-t border-border px-6 pb-6">
-                  <button className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200">
+                  <button className="text-sm text-green-500 hover:text-green-600 transition-colors duration-200">
                     Conoce más_
                   </button>
                 </div>
@@ -104,7 +110,7 @@ function Home() {
         </div>
       </div>
 
-      <div className="mt-16">
+      <div className="mt-12">
         <h2 className="text-3xl font-bold mb-8">
           Free AI Resources
         </h2>
