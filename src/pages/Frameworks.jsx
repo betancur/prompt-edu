@@ -75,9 +75,9 @@ function Frameworks() {
       name: 'A.P.E',
       description: 'A.P.E es un framework que estructura la creación de actividades educativas efectivas a través de tres componentes clave: la Acción a realizar, el Propósito educativo y las Expectativas de aprendizaje.',
       examples: [
-        '**Action**: "Crea una actividad interactiva para practicar verbos irregulares..."',
-        '**Purpose**: "El objetivo es reforzar el uso correcto de verbos en contexto..."',
-        '**Expectation**: "Los estudiantes deberán demostrar dominio en situaciones cotidianas..."'
+        '**Acción**: "Crea una actividad interactiva para practicar verbos irregulares..."',
+        '**Proposito**: "El objetivo es reforzar el uso correcto de verbos en contexto..."',
+        '**Expectativa**: "Los estudiantes deberán demostrar dominio en situaciones cotidianas..."'
       ],
       tips: [
         'Especifica la actividad de manera concreta y clara',

@@ -17,7 +17,7 @@ function Navbar() {
       <div className="container mx-auto max-w-[1200px] flex justify-between items-center">
         <div className="flex gap-8">
           <Link to="/" className="text-xl font-bold text-white hover:text-white/80">
-            PromptEd
+            EduPromptIA
           </Link>
           <Link to="/library" className="text-white hover:text-white/80">Biblioteca</Link>
           <Link to="/frameworks" className="text-white hover:text-white/80">Frameworks</Link>
