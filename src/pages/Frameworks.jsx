@@ -124,12 +124,12 @@ function Frameworks() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {frameworks.map(framework => (
-          <Card key={framework.name} className="bg-white">
+          <Card key={framework.name} className="hover:shadow-md transition-shadow">
             <CardHeader>
-              <CardTitle className="text-xl font-semibold">
-                <span className="text-green-500">//</span> {framework.name}
+              <CardTitle className="text-xl font-semibold flex items-center gap-2">
+                <span className="text-green-500 font-bold">//</span> {framework.name}
               </CardTitle>
-              <CardDescription className="text-sm text-muted-foreground mt-2">
+              <CardDescription className="text-muted-foreground mt-2">
                 {framework.description}
               </CardDescription>
             </CardHeader>
@@ -141,9 +141,9 @@ function Frameworks() {
                     {framework.examples.map((example, i) => (
                       <p 
                         key={i} 
-                        className="text-sm text-gray-600"
+                        className="text-sm text-muted-foreground"
                         dangerouslySetInnerHTML={{
-                          __html: example.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                          __html: example.replace(/\*\*(.*?)\*\*/g, '<strong class="text-foreground">$1</strong>')
                         }}
                       />
                     ))}
@@ -154,7 +154,7 @@ function Frameworks() {
                   <h3 className="text-lg font-semibold mb-3">Tips</h3>
                   <ul className="list-disc list-inside space-y-2">
                     {framework.tips.map((tip, i) => (
-                      <li key={i} className="text-sm text-gray-600">{tip}</li>
+                      <li key={i} className="text-sm text-muted-foreground">{tip}</li>
                     ))}
                   </ul>
                 </div>

@@ -1,18 +1,40 @@
 import { useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Copy } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import { useToast } from "@/components/ui/use-toast";
 
 function PromptOfDay() {
-  const [prompt, setPrompt] = useState(null); // Estado para el prompt aleatorio
-  const [loading, setLoading] = useState(true); // Estado de carga
+  const [prompt, setPrompt] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [needsExpansion, setNeedsExpansion] = useState(false);
+  const contentRef = useRef(null);
   const hasFetched = useRef(false);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const checkContentHeight = () => {
+      if (contentRef.current) {
+        const needsToExpand = contentRef.current.scrollHeight > 200;
+        setNeedsExpansion(needsToExpand);
+        if (!needsToExpand) setIsExpanded(false);
+      }
+    };
+
+    checkContentHeight();
+    // Add resize listener for responsive behavior
+    window.addEventListener('resize', checkContentHeight);
+    return () => window.removeEventListener('resize', checkContentHeight);
+  }, [prompt]);
 
   useEffect(() => {
     const fetchRandomPrompt = async () => {
       if (hasFetched.current) return;
       setLoading(true);
 
-      // Obtener todos los prompts con su categoría
       const { data: prompts, error } = await supabase
         .from('prompts')
         .select('*, categories(name, color)');
@@ -23,7 +45,6 @@ function PromptOfDay() {
         return;
       }
 
-      // Seleccionar un prompt aleatorio
       if (prompts && prompts.length > 0) {
         const randomIndex = Math.floor(Math.random() * prompts.length);
         setPrompt(prompts[randomIndex]);
@@ -39,6 +60,22 @@ function PromptOfDay() {
       hasFetched.current = false;
     };
   }, []);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(prompt.content);
+      toast({
+        title: "Copiado al portapapeles",
+        description: "El prompt ha sido copiado exitosamente.",
+      });
+    } catch (err) {
+      toast({
+        title: "Error al copiar",
+        description: "No se pudo copiar el prompt al portapapeles.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const getBadgeStyle = (color) => {
     if (!color) return {};
@@ -67,22 +104,47 @@ function PromptOfDay() {
 
   return (
     <div className="border rounded-md p-6 shadow-sm bg-card">
-      <Badge 
-        variant="outline"
-        style={getBadgeStyle(prompt.categories.color)}
-        className="mb-4"
-      >
-        {prompt.categories.name}
-      </Badge>
+      <div className="flex items-center justify-between mb-4">
+        <Badge 
+          variant="outline"
+          style={getBadgeStyle(prompt.categories.color)}
+        >
+          {prompt.categories.name}
+        </Badge>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleCopy}
+          title="Copiar prompt"
+        >
+          <Copy className="h-4 w-4" />
+        </Button>
+      </div>
       <div className="flex items-center gap-2 mb-4">
         <span style={{ color: prompt.categories.color }} className="text-xl font-semibold">//</span>
         <h3 className="text-xl font-semibold">
           {prompt.title}
         </h3>
       </div>
-      <p className="text-muted-foreground mb-4">
-        {prompt.content}
-      </p>
+      <div 
+        ref={contentRef}
+        className={`prose prose-sm dark:prose-invert max-w-none overflow-y-auto pr-2 
+          scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 
+          scrollbar-track-transparent hover:scrollbar-thumb-gray-400 
+          dark:hover:scrollbar-thumb-gray-500 transition-all duration-300
+          ${isExpanded ? 'max-h-[60vh]' : 'max-h-[200px]'}`}
+      >
+        <ReactMarkdown>{prompt.content}</ReactMarkdown>
+      </div>
+      {needsExpansion && (
+        <Button
+          variant="ghost"
+          className="w-full mt-4 text-muted-foreground hover:text-foreground"
+          onClick={() => setIsExpanded(!isExpanded)}
+        >
+          {isExpanded ? 'Ver menos_' : 'Ver más_'}
+        </Button>
+      )}
     </div>
   );
 }

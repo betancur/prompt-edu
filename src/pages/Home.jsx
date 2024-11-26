@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabaseClient';
 import PromptOfDay from '@/components/PromptOfDay';
 import * as HeroIcons from '@heroicons/react/24/outline';
 import { Button } from "@/components/ui/button";
+import { Card, CardHeader } from "@/components/ui/card";
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -74,26 +75,30 @@ function Home() {
           {categories.map(category => {
             const HeroIcon = getHeroIcon(category.icon);
             return (
-              <div
+              <Card 
                 key={category.id}
                 onClick={() => handleCategoryClick(category.id, category.name)}
-                className="bg-white rounded-lg shadow-md hover:shadow-lg p-6 cursor-pointer transition-shadow"
+                className="cursor-pointer hover:shadow-md transition-shadow"
               >
-                <div className="flex flex-col items-center text-center space-y-3">
-                  {HeroIcon ? (
-                    <HeroIcon className="w-10 h-10 text-gray-600" />
-                  ) : (
-                    <div className="text-3xl">❓</div>
-                  )}
-                  <h3 className="text-lg font-semibold">{category.name}</h3>
-                  <p className="text-muted-foreground">{category.description}</p>
-                </div>
-                <div className="mt-4 pt-4 border-t border-gray-100">
-                  <button className="text-sm text-gray-600 hover:text-green-500 transition-colors duration-200">
+                <CardHeader className="space-y-2">
+                  <div className="flex items-center justify-center mb-2">
+                    {HeroIcon ? (
+                      <HeroIcon className="w-12 h-12 text-green-500" />
+                    ) : (
+                      <div className="text-4xl">❓</div>
+                    )}
+                  </div>
+                  <div className="text-center">
+                    <h3 className="text-lg font-semibold">{category.name}</h3>
+                    <p className="text-muted-foreground mt-2">{category.description}</p>
+                  </div>
+                </CardHeader>
+                <div className="mt-4 pt-4 border-t border-border px-6 pb-6">
+                  <button className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200">
                     Conoce más_
                   </button>
                 </div>
-              </div>
+              </Card>
             );
           })}
         </div>
@@ -104,11 +109,11 @@ function Home() {
           Free AI Resources
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+          <Card className="p-6">
             <h3 className="text-xl font-bold mb-4">
               AI in Education Guide
             </h3>
-            <p className="mb-4">
+            <p className="mb-4 text-muted-foreground">
               Download our comprehensive guide on integrating AI into your classroom.
             </p>
             <Button
@@ -119,7 +124,7 @@ function Home() {
                 Download PDF
               </a>
             </Button>
-          </div>
+          </Card>
           {/* Add more resources here */}
         </div>
       </div>
