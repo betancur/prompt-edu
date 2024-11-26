@@ -105,7 +105,12 @@ function Frameworks() {
 
   return (
     <div className="container mx-auto max-w-[1200px] py-12">
-      <h1 className="text-4xl font-bold font-jost mb-4">Marcos de Trabajo</h1>
+      <div className="mb-4">
+        <div className="title-decoration">
+          <div className="title-slashes">//</div>
+          <h1 className="text-4xl font-bold font-jost">Marcos de Trabajo</h1>
+        </div>
+      </div>
       <p className="text-xl text-muted-foreground mb-8">
         Frameworks para estructurar tus prompts educativos de manera efectiva
       </p>

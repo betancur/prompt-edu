@@ -53,9 +53,12 @@ function Home() {
     <div>
       <div className="w-full m-0 px-8 py-12 -mt-[1px]">
         <div className="text-center w-full max-w-full m-0 p-0">
-          <h1 className="text-5xl font-extrabold font-jost text-gray-900 mb-4 leading-tight">
-            Mejore su enseñanza con prompts de IA
-          </h1>
+          <div className="title-decoration inline-block">
+            <div className="title-slashes">//</div>
+            <h1 className="text-5xl font-extrabold font-jost text-gray-900 mb-4 leading-tight">
+              Mejore su enseñanza con prompts de IA
+            </h1>
+          </div>
           <p className="text-2xl text-gray-600 font-light font-jost mb-8">
             Descubre y crea prompts efectivos para tu aula
           </p>

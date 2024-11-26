@@ -19,6 +19,7 @@ module.exports = {
     extend: {
       fontFamily: {
         jost: ['Jost', 'sans-serif'],
+        thicker: ['Thicker', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

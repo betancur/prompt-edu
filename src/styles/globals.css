@@ -2,11 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Thicker';
+  src: url('/fonts/Thicker-Extrablack.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+  }
+
+  .title-decoration {
+    position: relative;
+  }
+
+  .title-slashes {
+    font-family: 'Thicker';
+    font-size: 32px;
+    line-height: 1;
+    color: #001F2C;
+    margin-bottom: 4px;
+    display: block;
   }
 
   :root {
