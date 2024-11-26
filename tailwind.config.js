@@ -7,6 +7,7 @@ module.exports = {
     './app/**/*.{js,jsx}',
     './src/**/*.{js,jsx}',
   ],
+  prefix: "",
   theme: {
     container: {
       center: true,
@@ -16,6 +17,9 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        jost: ['Jost', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

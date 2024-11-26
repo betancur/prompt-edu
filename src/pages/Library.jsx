@@ -102,6 +102,7 @@ function Library() {
 
   return (
     <div>
+      <h1 className="text-4xl font-bold font-jost mb-8">Biblioteca de Prompts</h1>
       <div className="flex flex-col space-y-8">
         <div className="flex flex-col md:flex-row gap-4">
           <input
@@ -131,16 +132,19 @@ function Library() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredPrompts.map(prompt => (
-              <PromptCard
-                key={prompt.id}
-                title={prompt.title}
-                content={prompt.content}
-                createdAt={prompt.created_at}
-                category={categories.find(cat => cat.id === prompt.category_id)?.name || 'Uncategorized'}
-                colorScheme={categoryColors[prompt.category_id]}
-              />
-            ))}
+            {filteredPrompts.map(prompt => {
+              const category = categories.find(cat => cat.id === prompt.category_id);
+              return (
+                <PromptCard
+                  key={prompt.id}
+                  title={prompt.title}
+                  content={prompt.content}
+                  createdAt={prompt.created_at}
+                  category={category?.name || 'Uncategorized'}
+                  categoryColor={category?.color}
+                />
+              );
+            })}
           </div>
         )}
       </div>

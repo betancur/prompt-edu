@@ -33,7 +33,7 @@ function Home() {
   return (
     <div>
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4">
+        <h1 className="text-4xl font-bold font-jost mb-4">
           Mejore su enseñanza con prompts de IA
         </h1>
         <p className="text-xl text-muted-foreground mb-8">

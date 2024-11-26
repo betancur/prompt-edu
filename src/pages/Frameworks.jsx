@@ -28,8 +28,8 @@ function Frameworks() {
   ]
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-8">Prompt Engineering Frameworks</h1>
+    <div className="max-w-4xl mx-auto px-4">
+      <h1 className="text-4xl font-bold font-jost mb-8">Marcos de Trabajo</h1>
       
       <Accordion type="multiple" className="w-full">
         {frameworks.map(framework => (

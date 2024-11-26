@@ -12,7 +12,7 @@ function Resources() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-8">Free AI Resources</h1>
+      <h1 className="text-4xl font-bold font-jost mb-8">Recursos Gratuitos</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {resources.map(resource => (
