@@ -80,8 +80,16 @@ function PromptCard({ title, content, category, createdAt, categoryColor }) {
               {new Date(createdAt).toLocaleDateString()}
             </span>
           </div>
-          <h3 className="text-lg font-semibold">{title}</h3>
+          <div className="flex items-center gap-2">
+            <span style={{ color: categoryColor }} className="text-lg font-semibold">//</span>
+            <h3 className="text-lg font-semibold">{title}</h3>
+          </div>
         </CardHeader>
+        <div className="mt-4 pt-4 border-t border-gray-100 px-6 pb-6">
+          <button className="text-sm text-gray-600 hover:text-green-500 transition-colors duration-200">
+            Conoce más_
+          </button>
+        </div>
       </Card>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>

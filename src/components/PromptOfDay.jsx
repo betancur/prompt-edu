@@ -74,9 +74,12 @@ function PromptOfDay() {
       >
         {prompt.categories.name}
       </Badge>
-      <h3 className="text-xl font-semibold mb-4">
-        {prompt.title}
-      </h3>
+      <div className="flex items-center gap-2 mb-4">
+        <span style={{ color: prompt.categories.color }} className="text-xl font-semibold">//</span>
+        <h3 className="text-xl font-semibold">
+          {prompt.title}
+        </h3>
+      </div>
       <p className="text-muted-foreground mb-4">
         {prompt.content}
       </p>

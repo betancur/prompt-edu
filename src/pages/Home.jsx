@@ -1,28 +1,36 @@
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { supabase } from '../lib/supabaseClient'
-import { Button } from '@/components/ui/button'
-import PromptOfDay from '../components/PromptOfDay'
-import CategoryCard from '../components/CategoryCard'
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../lib/supabaseClient';
+import PromptOfDay from '@/components/PromptOfDay';
+import * as HeroIcons from '@heroicons/react/24/outline';
+import { Button } from "@/components/ui/button";
 
 function Home() {
-  const navigate = useNavigate()
-  const [searchQuery, setSearchQuery] = useState('')
-  const [categories, setCategories] = useState([])
+  const [searchQuery, setSearchQuery] = useState('');
+  const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const { data, error } = await supabase.from('categories').select('*');
+      const { data, error } = await supabase
+        .from('categories')
+        .select('*');
+      
       if (error) {
-        console.error('Error fetching categories:', error);
+        console.error('Error:', error);
       } else {
-        console.log('Fetched categories:', data);
-        setCategories(data);
+        setCategories(data || []);
       }
     };
-  
+
     fetchCategories();
   }, []);
+
+  const handleSearch = (e) => {
+    if (e.key === 'Enter' && searchQuery.trim()) {
+      navigate(`/library?search=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
 
   const handleCategoryClick = (categoryId, categoryName) => {
     navigate(`/library?category=${categoryId}`, { 
@@ -30,10 +38,14 @@ function Home() {
     });
   };
 
-  const handleSearch = (e) => {
-    if (e.key === 'Enter' && searchQuery.trim()) {
-      navigate(`/library?search=${encodeURIComponent(searchQuery.trim())}`);
-    }
+  // Function to get HeroIcon component
+  const getHeroIcon = (iconName) => {
+    if (!iconName) return null;
+    const pascalCaseIconName = iconName
+      .split('-')
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join('') + 'Icon';
+    return HeroIcons[pascalCaseIconName];
   };
 
   return (
@@ -58,16 +70,32 @@ function Home() {
 
       <div className="mt-16">
         <h2 className="text-3xl font-bold mb-8">Categorías destacadas</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {categories.map(category => (
-            <CategoryCard 
-              key={category.id} 
-              title={category.name} 
-              count={category.description || 'Description not available'}
-              icon={category.icon}
-              onClick={() => handleCategoryClick(category.id, category.name)}
-            />
-          ))}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          {categories.map(category => {
+            const HeroIcon = getHeroIcon(category.icon);
+            return (
+              <div
+                key={category.id}
+                onClick={() => handleCategoryClick(category.id, category.name)}
+                className="bg-white rounded-lg shadow-md hover:shadow-lg p-6 cursor-pointer transition-shadow"
+              >
+                <div className="flex flex-col items-center text-center space-y-3">
+                  {HeroIcon ? (
+                    <HeroIcon className="w-10 h-10 text-gray-600" />
+                  ) : (
+                    <div className="text-3xl">❓</div>
+                  )}
+                  <h3 className="text-lg font-semibold">{category.name}</h3>
+                  <p className="text-muted-foreground">{category.description}</p>
+                </div>
+                <div className="mt-4 pt-4 border-t border-gray-100">
+                  <button className="text-sm text-gray-600 hover:text-green-500 transition-colors duration-200">
+                    Conoce más_
+                  </button>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -125,7 +153,7 @@ function Home() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Home
+export default Home;
