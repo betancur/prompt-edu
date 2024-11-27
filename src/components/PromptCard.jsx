@@ -11,6 +11,9 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
+import { sanitizeInput, secureStorage, handleError } from '@/middleware/security';
+import rehypeRaw from 'rehype-raw';
+import rehypeSanitize from 'rehype-sanitize';
 
 function PromptCard({ id, title, content, category, createdAt, categoryColor, onFavoriteChange }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,7 +21,7 @@ function PromptCard({ id, title, content, category, createdAt, categoryColor, on
   const { toast } = useToast();
 
   useEffect(() => {
-    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    const favorites = secureStorage.get('favorites') || [];
     setIsFavorite(favorites.includes(id));
   }, [id]);
 
@@ -31,11 +34,7 @@ function PromptCard({ id, title, content, category, createdAt, categoryColor, on
         description: "El prompt ha sido copiado exitosamente.",
       });
     } catch (err) {
-      toast({
-        title: "Error al copiar",
-        description: "No se pudo copiar el prompt al portapapeles.",
-        variant: "destructive",
-      });
+      toast(handleError(err, "No se pudo copiar el prompt al portapapeles."));
     }
   };
 
@@ -43,8 +42,8 @@ function PromptCard({ id, title, content, category, createdAt, categoryColor, on
     e.stopPropagation();
     try {
       await navigator.share({
-        title: title,
-        text: content,
+        title: sanitizeInput(title),
+        text: sanitizeInput(content),
       });
       toast({
         title: "Compartido",
@@ -52,18 +51,14 @@ function PromptCard({ id, title, content, category, createdAt, categoryColor, on
       });
     } catch (err) {
       if (err.name !== 'AbortError') {
-        toast({
-          title: "Error al compartir",
-          description: "No se pudo compartir el prompt.",
-          variant: "destructive",
-        });
+        toast(handleError(err, "No se pudo compartir el prompt."));
       }
     }
   };
 
   const toggleFavorite = (e) => {
     e.stopPropagation();
-    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    const favorites = secureStorage.get('favorites') || [];
     let newFavorites;
     
     if (isFavorite) {
@@ -80,7 +75,7 @@ function PromptCard({ id, title, content, category, createdAt, categoryColor, on
       });
     }
     
-    localStorage.setItem('favorites', JSON.stringify(newFavorites));
+    secureStorage.set('favorites', newFavorites);
     setIsFavorite(!isFavorite);
     if (onFavoriteChange) {
       onFavoriteChange(id, !isFavorite);
@@ -168,7 +163,16 @@ function PromptCard({ id, title, content, category, createdAt, categoryColor, on
 
           <div className="mt-4 space-y-4 prose prose-sm dark:prose-invert max-w-none overflow-y-auto max-h-[60vh] pr-2 
             scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent hover:scrollbar-thumb-gray-400 dark:hover:scrollbar-thumb-gray-500">
-            <ReactMarkdown>{content}</ReactMarkdown>
+            <ReactMarkdown
+              rehypePlugins={[rehypeSanitize, rehypeRaw]}
+              components={{
+                // Restrict potentially dangerous HTML elements
+                script: () => null,
+                iframe: () => null
+              }}
+            >
+              {sanitizeInput(content)}
+            </ReactMarkdown>
           </div>
 
           <DialogFooter className="flex justify-end space-x-2 mt-6">

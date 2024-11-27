@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabaseClient';
 import { Star } from 'lucide-react';
 import PromptCard from '../components/PromptCard';
 import { Button } from "@/components/ui/button";
+import { secureStorage } from '@/middleware/security';
 
 function Library() {
   const [searchParams] = useSearchParams();
@@ -71,7 +72,7 @@ function Library() {
   // Filter prompts based on search query, selected category, and favorites
   useEffect(() => {
     let filtered = [...prompts];
-    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    const favorites = secureStorage.get('favorites') || [];
 
     if (showFavorites) {
       filtered = filtered.filter(prompt => favorites.includes(prompt.id));
