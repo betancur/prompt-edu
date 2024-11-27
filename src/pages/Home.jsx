@@ -111,31 +111,6 @@ function Home() {
           })}
         </div>
       </div>
-
-      <div className="mt-12">
-        <h2 className="text-3xl font-bold mb-8">
-          Free AI Resources
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card className="p-6">
-            <h3 className="text-xl font-bold mb-4">
-              AI in Education Guide
-            </h3>
-            <p className="mb-4 text-muted-foreground">
-              Download our comprehensive guide on integrating AI into your classroom.
-            </p>
-            <Button
-              asChild
-              className="w-full"
-            >
-              <a href="/resources/ai-in-education-guide.pdf" download>
-                Download PDF
-              </a>
-            </Button>
-          </Card>
-          {/* Add more resources here */}
-        </div>
-      </div>
     </div>
   );
 }

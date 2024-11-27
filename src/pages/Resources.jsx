@@ -115,7 +115,7 @@ function Resources() {
               <div className="w-full md:w-2/3 flex flex-col">
                 <CardHeader>
                   <div>
-                    <Badge variant="secondary" className="mb-2">
+                    <Badge className="mb-2 bg-[#4A5AB9] text-white hover:bg-[#4A5AB9]/90">
                       {featuredResource.status || 'Nuevo'}
                     </Badge>
                     <CardTitle className="text-2xl mb-2">{featuredResource.title}</CardTitle>
@@ -166,7 +166,7 @@ function Resources() {
                 variant="outline"
                 size="icon"
                 onClick={() => emblaApi?.scrollPrev()}
-                className="rounded-full"
+                className="rounded-full border-[#4A5AB9] text-[#4A5AB9] hover:bg-[#4A5AB9] hover:text-white"
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
@@ -174,7 +174,7 @@ function Resources() {
                 variant="outline"
                 size="icon"
                 onClick={() => emblaApi?.scrollNext()}
-                className="rounded-full"
+                className="rounded-full border-[#4A5AB9] text-[#4A5AB9] hover:bg-[#4A5AB9] hover:text-white"
               >
                 <ChevronRight className="h-4 w-4" />
               </Button>
@@ -188,7 +188,7 @@ function Resources() {
                   <Card className="flex flex-col h-full">
                     <CardHeader>
                       {resource.status && (
-                        <Badge variant="secondary" className="mb-2 w-fit">
+                        <Badge className="mb-2 w-fit bg-[#4A5AB9] text-white hover:bg-[#4A5AB9]/90">
                           {resource.status}
                         </Badge>
                       )}
