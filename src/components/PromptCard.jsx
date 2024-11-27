@@ -94,7 +94,7 @@ function PromptCard({ id, title, content, category, createdAt, categoryColor, on
   return (
     <>
       <Card 
-        className="cursor-pointer hover:shadow-md transition-shadow relative"
+        className="cursor-pointer hover:shadow-md transition-shadow relative flex flex-col h-full"
         onClick={() => setIsOpen(true)}
       >
         <Button
@@ -124,7 +124,7 @@ function PromptCard({ id, title, content, category, createdAt, categoryColor, on
             <h3 className="text-lg font-semibold">{title}</h3>
           </div>
         </CardHeader>
-        <div className="mt-4 pt-4 border-t border-gray-100 px-6 pb-6">
+        <div className="mt-auto pt-4 border-t border-gray-100 px-6 pb-6">
           <button className="text-sm text-gray-600 hover:text-green-500 transition-colors duration-200">
             Conoce más_
           </button>
