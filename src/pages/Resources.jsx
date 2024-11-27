@@ -44,19 +44,22 @@ function Resources() {
       title: "Manual del Profesor Digital",
       description: "Guía completa para la transformación digital en el aula",
       type: "PDF",
-      link: "#"
+      link: "#",
+      coverImage: null
     },
     {
       title: "Plantillas de Prompts Educativos",
       description: "Colección de prompts listos para usar en diferentes materias",
       type: "PDF",
-      link: "#"
+      link: "#",
+      coverImage: null
     },
     {
       title: "Evaluación con IA",
       description: "Estrategias para la evaluación asistida por IA",
       type: "PDF",
-      link: "#"
+      link: "#",
+      coverImage: null
     }
   ];
 
@@ -117,7 +120,7 @@ function Resources() {
       {/* Recurso Destacado del Mes */}
       <section className="mb-16">
         <h2 className="text-2xl font-semibold mb-6">Recurso Destacado del Mes</h2>
-        <Card className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950/30 dark:to-blue-950/30">
+        <Card className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950/30 dark:to-blue-950/30 flex flex-col h-full">
           <CardHeader>
             <div className="flex justify-between items-start">
               <div>
@@ -131,7 +134,7 @@ function Resources() {
               </div>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="mt-auto">
             <Button className="gap-2" asChild>
               <a href={featuredResource.link} download>
                 <Download size={16} />
@@ -147,7 +150,7 @@ function Resources() {
         <h2 className="text-2xl font-semibold mb-6">Comenzar con IA</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {gettingStartedResources.map((resource, index) => (
-            <Card key={index} className="hover:shadow-md transition-shadow">
+            <Card key={index} className="hover:shadow-md transition-shadow flex flex-col h-full">
               <CardHeader>
                 <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-4">
                   <resource.icon className="w-6 h-6 text-green-600 dark:text-green-400" />
@@ -155,7 +158,7 @@ function Resources() {
                 <CardTitle className="text-xl">{resource.title}</CardTitle>
                 <CardDescription>{resource.description}</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="mt-auto">
                 <Button variant="link" className="p-0">
                   Explorar
                 </Button>
@@ -170,12 +173,24 @@ function Resources() {
         <h2 className="text-2xl font-semibold mb-6">Guías y documentos</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {guides.map((guide, index) => (
-            <Card key={index} className="hover:shadow-md transition-shadow">
+            <Card key={index} className="hover:shadow-md transition-shadow flex flex-col h-full">
               <CardHeader>
+                <div className="aspect-[3/4] bg-gray-100 dark:bg-gray-800 rounded-md flex items-center justify-center mb-4 relative overflow-hidden">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <BookOpen className="w-16 h-16 text-gray-300 dark:text-gray-600" />
+                  </div>
+                  {guide.coverImage && (
+                    <img
+                      src={guide.coverImage}
+                      alt={guide.title}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  )}
+                </div>
                 <CardTitle className="text-xl">{guide.title}</CardTitle>
                 <CardDescription>{guide.description}</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="mt-auto">
                 <Button className="gap-2">
                   <Download size={16} />
                   Descargar {guide.type}
@@ -191,7 +206,7 @@ function Resources() {
         <h2 className="text-2xl font-semibold mb-6">Videoteca</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {videos.map((video, index) => (
-            <Card key={index} className="hover:shadow-md transition-shadow">
+            <Card key={index} className="hover:shadow-md transition-shadow flex flex-col h-full">
               <CardHeader>
                 <div className="aspect-video bg-gray-100 dark:bg-gray-800 rounded-md flex items-center justify-center mb-4">
                   <Play className="w-12 h-12 text-gray-400" />
@@ -202,7 +217,7 @@ function Resources() {
                   Duración: {video.duration}
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="mt-auto">
                 <Button variant="secondary" className="gap-2">
                   <Play size={16} />
                   Ver video
@@ -218,17 +233,16 @@ function Resources() {
         <h2 className="text-2xl font-semibold mb-6">Herramientas prácticas</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {tools.map((tool, index) => (
-            <Card key={index} className="hover:shadow-md transition-shadow">
+            <Card key={index} className="hover:shadow-md transition-shadow flex flex-col h-full">
               <CardHeader>
-                <div className="flex justify-between items-start">
+                <div className="flex justify-between items-start mb-2">
                   <CardTitle className="text-xl">{tool.title}</CardTitle>
                   <Badge variant="secondary">{tool.status}</Badge>
                 </div>
                 <CardDescription>{tool.description}</CardDescription>
               </CardHeader>
-              <CardContent>
-                <Button variant="outline" className="gap-2">
-                  <Wrench size={16} />
+              <CardContent className="mt-auto">
+                <Button variant="outline">
                   Acceder
                 </Button>
               </CardContent>
