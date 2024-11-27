@@ -8,16 +8,44 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Download, Play, BookOpen, Wrench, ArrowRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
 
 function Resources() {
-  const featuredResource = {
-    title: "Error del Prompt",
-    description: "Guía para potenciar la mente y desatar la creatividad con inteligencia artificial",
-    type: "PDF",
-    date: "Marzo 2024",
-    link: "/resources/ErrordelPrompt_nodo.pdf",
-    coverImage: "/resources/ErrordelPrompt_cover.png"
+  const [resources, setResources] = useState([]);
+  const [featuredResource, setFeaturedResource] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchResources();
+  }, []);
+
+  const fetchResources = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('resources')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      // Set the first PDF as featured resource
+      const featured = data.find(resource => resource.type === 'PDF');
+      setFeaturedResource(featured || null);
+
+      // Set all resources
+      setResources(data || []);
+    } catch (error) {
+      console.error('Error fetching resources:', error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  // Filter resources by type
+  const pdfResources = resources.filter(resource => resource.type === 'PDF');
+  const linkResources = resources.filter(resource => resource.type === 'Link');
+  const videoResources = resources.filter(resource => resource.type === 'Video');
 
   const gettingStartedResources = [
     {
@@ -40,71 +68,13 @@ function Resources() {
     }
   ];
 
-  const guides = [
-    {
-      title: "Manual del Profesor Digital",
-      description: "Guía completa para la transformación digital en el aula",
-      type: "PDF",
-      link: "#",
-      coverImage: null
-    },
-    {
-      title: "Plantillas de Prompts Educativos",
-      description: "Colección de prompts listos para usar en diferentes materias",
-      type: "PDF",
-      link: "#",
-      coverImage: null
-    },
-    {
-      title: "Evaluación con IA",
-      description: "Estrategias para la evaluación asistida por IA",
-      type: "PDF",
-      link: "#",
-      coverImage: null
-    }
-  ];
-
-  const videos = [
-    {
-      title: "Tutorial ChatGPT",
-      description: "Aprende a usar ChatGPT para crear material didáctico",
-      duration: "15:30",
-      link: "#"
-    },
-    {
-      title: "IA en el Aula",
-      description: "Casos de éxito y ejemplos prácticos",
-      duration: "22:45",
-      link: "#"
-    },
-    {
-      title: "Prompts Efectivos",
-      description: "Cómo escribir prompts que generen mejores resultados",
-      duration: "18:20",
-      link: "#"
-    }
-  ];
-
-  const tools = [
-    {
-      title: "Generador de Ejercicios",
-      description: "Crea ejercicios personalizados para tus estudiantes",
-      status: "Gratis",
-      link: "#"
-    },
-    {
-      title: "Asistente de Planificación",
-      description: "Planifica tus clases con ayuda de IA",
-      status: "Gratis",
-      link: "#"
-    },
-    {
-      title: "Evaluador de Textos",
-      description: "Analiza y evalúa textos estudiantiles",
-      status: "Gratis",
-      link: "#"
-    }
-  ];
+  if (loading) {
+    return (
+      <div className="container mx-auto max-w-[1200px] py-12">
+        <p>Cargando recursos...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto max-w-[1200px] py-12">
@@ -118,150 +88,167 @@ function Resources() {
         Todo lo que necesitas para integrar IA en tu aula
       </p>
 
-      {/* Recurso Destacado del Mes */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold mb-6">Recurso Destacado del Mes</h2>
-        <Card className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950/30 dark:to-blue-950/30">
-          <div className="flex">
-            <div className="w-1/3 p-6 flex items-center">
-              <div className="h-[250px] w-full">
-                <img 
-                  src={featuredResource.coverImage} 
-                  alt={featuredResource.title}
-                  className="w-full h-full object-contain"
-                />
+      {/* Recurso destacado del mes */}
+      {featuredResource && (
+        <section className="mb-16">
+          <h2 className="text-2xl font-semibold mb-6">Recurso destacado del mes</h2>
+          <Card className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950/30 dark:to-blue-950/30">
+            <div className="flex flex-col md:flex-row">
+              <div className="w-full md:w-1/3 p-6 flex items-center">
+                <div className="h-[250px] w-full">
+                  <img 
+                    src={featuredResource.image || '/placeholder-pdf.png'} 
+                    alt={featuredResource.title}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+              </div>
+              <div className="w-full md:w-2/3 flex flex-col">
+                <CardHeader>
+                  <div>
+                    <Badge variant="secondary" className="mb-2">
+                      {featuredResource.status || 'Nuevo'}
+                    </Badge>
+                    <CardTitle className="text-2xl mb-2">{featuredResource.title}</CardTitle>
+                    <CardDescription className="text-base">
+                      {featuredResource.description}
+                    </CardDescription>
+                  </div>
+                </CardHeader>
+                <CardContent className="mt-auto">
+                  <Button className="gap-2" asChild>
+                    <a href={featuredResource.link} download>
+                      <Download size={16} />
+                      Descargar {featuredResource.type}
+                    </a>
+                  </Button>
+                </CardContent>
               </div>
             </div>
-            <div className="w-2/3 flex flex-col">
-              <CardHeader>
-                <div>
-                  <Badge variant="secondary" className="mb-2">
-                    {featuredResource.date}
-                  </Badge>
-                  <CardTitle className="text-2xl mb-2">{featuredResource.title}</CardTitle>
-                  <CardDescription className="text-base">
-                    {featuredResource.description}
-                  </CardDescription>
-                </div>
-              </CardHeader>
-              <CardContent className="mt-auto">
-                <Button className="gap-2" asChild>
-                  <a href={featuredResource.link} download>
-                    <Download size={16} />
-                    Descargar {featuredResource.type}
-                  </a>
-                </Button>
-              </CardContent>
-            </div>
-          </div>
-        </Card>
-      </section>
+          </Card>
+        </section>
+      )}
 
       {/* Comenzar con IA */}
       <section className="mb-16">
         <h2 className="text-2xl font-semibold mb-6">Comenzar con IA</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {gettingStartedResources.map((resource, index) => (
-            <Card key={index} className="hover:shadow-md transition-shadow flex flex-col h-full">
+            <Card key={index} className="flex flex-col h-full">
               <CardHeader>
-                <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-4">
-                  <resource.icon className="w-6 h-6 text-green-600 dark:text-green-400" />
+                <div className="flex items-center gap-2 mb-4">
+                  <resource.icon className="h-5 w-5 text-primary" />
                 </div>
-                <CardTitle className="text-xl">{resource.title}</CardTitle>
+                <CardTitle className="text-xl mb-2">{resource.title}</CardTitle>
                 <CardDescription>{resource.description}</CardDescription>
               </CardHeader>
-              <CardContent className="mt-auto">
-                <Button variant="link" className="p-0">
-                  Explorar
-                </Button>
-              </CardContent>
             </Card>
           ))}
         </div>
       </section>
 
       {/* Guías y documentos */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold mb-6">Guías y documentos</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {guides.map((guide, index) => (
-            <Card key={index} className="hover:shadow-md transition-shadow flex flex-col h-full">
-              <CardHeader>
-                <div className="aspect-[3/4] bg-gray-100 dark:bg-gray-800 rounded-md flex items-center justify-center mb-4 relative overflow-hidden">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <BookOpen className="w-16 h-16 text-gray-300 dark:text-gray-600" />
-                  </div>
-                  {guide.coverImage && (
-                    <img
-                      src={guide.coverImage}
-                      alt={guide.title}
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
+      {pdfResources.length > 0 && (
+        <section className="mb-16">
+          <h2 className="text-2xl font-semibold mb-6">Guías y documentos</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {pdfResources.map((resource) => (
+              <Card key={resource.id} className="flex flex-col h-full">
+                <CardHeader>
+                  {resource.status && (
+                    <Badge variant="secondary" className="mb-2 w-fit">
+                      {resource.status}
+                    </Badge>
                   )}
-                </div>
-                <CardTitle className="text-xl">{guide.title}</CardTitle>
-                <CardDescription>{guide.description}</CardDescription>
-              </CardHeader>
-              <CardContent className="mt-auto">
-                <Button className="gap-2">
-                  <Download size={16} />
-                  Descargar {guide.type}
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
+                  <div className="h-[250px] mb-4">
+                    <img 
+                      src={resource.image || '/placeholder-pdf.png'} 
+                      alt={resource.title}
+                      className="w-full h-full object-contain rounded-lg"
+                    />
+                  </div>
+                  <CardTitle className="text-xl mb-2">{resource.title}</CardTitle>
+                  {resource.description && (
+                    <CardDescription>{resource.description}</CardDescription>
+                  )}
+                </CardHeader>
+                <CardContent className="mt-auto pt-4">
+                  <Button className="gap-2" asChild>
+                    <a href={resource.link} download>
+                      <Download size={16} />
+                      Descargar PDF
+                    </a>
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Videoteca */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold mb-6">Videoteca</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {videos.map((video, index) => (
-            <Card key={index} className="hover:shadow-md transition-shadow flex flex-col h-full">
-              <CardHeader>
-                <div className="aspect-video bg-gray-100 dark:bg-gray-800 rounded-md flex items-center justify-center mb-4">
-                  <Play className="w-12 h-12 text-gray-400" />
-                </div>
-                <CardTitle className="text-xl">{video.title}</CardTitle>
-                <CardDescription>{video.description}</CardDescription>
-                <div className="text-sm text-muted-foreground mt-2">
-                  Duración: {video.duration}
-                </div>
-              </CardHeader>
-              <CardContent className="mt-auto">
-                <Button variant="secondary" className="gap-2">
-                  <Play size={16} />
-                  Ver video
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
+      {videoResources.length > 0 && (
+        <section className="mb-16">
+          <h2 className="text-2xl font-semibold mb-6">Videoteca</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {videoResources.map((resource) => (
+              <Card key={resource.id} className="flex flex-col h-full">
+                <CardHeader>
+                  {resource.status && (
+                    <Badge variant="secondary" className="mb-2 w-fit">
+                      {resource.status}
+                    </Badge>
+                  )}
+                  <CardTitle className="text-xl mb-2">{resource.title}</CardTitle>
+                  {resource.description && (
+                    <CardDescription>{resource.description}</CardDescription>
+                  )}
+                </CardHeader>
+                <CardContent className="mt-auto pt-4">
+                  <Button className="gap-2" asChild>
+                    <a href={resource.link} target="_blank" rel="noopener noreferrer">
+                      <Play size={16} />
+                      Ver video
+                    </a>
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Herramientas prácticas */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold mb-6">Herramientas prácticas</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {tools.map((tool, index) => (
-            <Card key={index} className="hover:shadow-md transition-shadow flex flex-col h-full">
-              <CardHeader>
-                <div className="flex justify-between items-start mb-2">
-                  <CardTitle className="text-xl">{tool.title}</CardTitle>
-                  <Badge variant="secondary">{tool.status}</Badge>
-                </div>
-                <CardDescription>{tool.description}</CardDescription>
-              </CardHeader>
-              <CardContent className="mt-auto">
-                <Button variant="outline">
-                  Acceder
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
+      {linkResources.length > 0 && (
+        <section className="mb-16">
+          <h2 className="text-2xl font-semibold mb-6">Herramientas prácticas</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {linkResources.map((resource) => (
+              <Card key={resource.id} className="flex flex-col h-full">
+                <CardHeader>
+                  {resource.status && (
+                    <Badge variant="secondary" className="mb-2 w-fit">
+                      {resource.status}
+                    </Badge>
+                  )}
+                  <CardTitle className="text-xl mb-2">{resource.title}</CardTitle>
+                  {resource.description && (
+                    <CardDescription>{resource.description}</CardDescription>
+                  )}
+                </CardHeader>
+                <CardContent className="mt-auto pt-4">
+                  <Button className="gap-2" asChild>
+                    <a href={resource.link} target="_blank" rel="noopener noreferrer">
+                      <ArrowRight size={16} />
+                      Acceder
+                    </a>
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

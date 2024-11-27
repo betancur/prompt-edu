@@ -119,7 +119,7 @@ function PromptCard({ id, title, content, category, createdAt, categoryColor, on
               {new Date(createdAt).toLocaleDateString()}
             </span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-start gap-2">
             <span style={{ color: categoryColor }} className="text-lg font-semibold">//</span>
             <h3 className="text-lg font-semibold">{title}</h3>
           </div>
@@ -155,7 +155,7 @@ function PromptCard({ id, title, content, category, createdAt, categoryColor, on
                 </Button>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-start gap-2">
               <span style={{ color: categoryColor }} className="text-xl font-semibold">//</span>
               <h2 className="text-xl font-semibold">{title}</h2>
             </div>
