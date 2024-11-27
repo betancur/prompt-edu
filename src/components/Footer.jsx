@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function Footer() {
   return (
     <footer className="mt-16 bg-white dark:bg-background">
@@ -25,6 +27,26 @@ function Footer() {
                 className="h-full w-auto object-contain dark:invert dark:brightness-0 dark:contrast-200"
               />
             </div>
+          </div>
+          <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+            <p>
+              Curado con ❤️ por{" "}
+              <a
+                href="https://es.nodoeafit.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-colors"
+              >
+                Nodo Eafit
+              </a>
+            </p>
+            <span>•</span>
+            <Link
+              to="/privacy-policy"
+              className="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-colors"
+            >
+              Política de privacidad
+            </Link>
           </div>
         </div>
       </div>

@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Library from './pages/Library';
 import Frameworks from './pages/Frameworks';
 import Resources from './pages/Resources';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 import { Toaster } from "@/components/ui/toaster";
 import Footer from './components/Footer';
 
@@ -17,6 +18,7 @@ function App() {
           <Route path="library" element={<Library />} />
           <Route path="frameworks" element={<Frameworks />} />
           <Route path="resources" element={<Resources />} />
+          <Route path="privacy-policy" element={<PrivacyPolicy />} />
         </Route>
       </Routes>
       <Footer />

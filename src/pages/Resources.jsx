@@ -15,7 +15,8 @@ function Resources() {
     description: "Guía para potenciar la mente y desatar la creatividad con inteligencia artificial",
     type: "PDF",
     date: "Marzo 2024",
-    link: "/resources/ErrordelPrompt_nodo.pdf"
+    link: "/resources/ErrordelPrompt_nodo.pdf",
+    coverImage: "/resources/ErrordelPrompt_cover.png"
   };
 
   const gettingStartedResources = [
@@ -120,28 +121,39 @@ function Resources() {
       {/* Recurso Destacado del Mes */}
       <section className="mb-16">
         <h2 className="text-2xl font-semibold mb-6">Recurso Destacado del Mes</h2>
-        <Card className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950/30 dark:to-blue-950/30 flex flex-col h-full">
-          <CardHeader>
-            <div className="flex justify-between items-start">
-              <div>
-                <Badge variant="secondary" className="mb-2">
-                  {featuredResource.date}
-                </Badge>
-                <CardTitle className="text-2xl mb-2">{featuredResource.title}</CardTitle>
-                <CardDescription className="text-base">
-                  {featuredResource.description}
-                </CardDescription>
+        <Card className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950/30 dark:to-blue-950/30">
+          <div className="flex">
+            <div className="w-1/3 p-6 flex items-center">
+              <div className="h-[250px] w-full">
+                <img 
+                  src={featuredResource.coverImage} 
+                  alt={featuredResource.title}
+                  className="w-full h-full object-contain"
+                />
               </div>
             </div>
-          </CardHeader>
-          <CardContent className="mt-auto">
-            <Button className="gap-2" asChild>
-              <a href={featuredResource.link} download>
-                <Download size={16} />
-                Descargar {featuredResource.type}
-              </a>
-            </Button>
-          </CardContent>
+            <div className="w-2/3 flex flex-col">
+              <CardHeader>
+                <div>
+                  <Badge variant="secondary" className="mb-2">
+                    {featuredResource.date}
+                  </Badge>
+                  <CardTitle className="text-2xl mb-2">{featuredResource.title}</CardTitle>
+                  <CardDescription className="text-base">
+                    {featuredResource.description}
+                  </CardDescription>
+                </div>
+              </CardHeader>
+              <CardContent className="mt-auto">
+                <Button className="gap-2" asChild>
+                  <a href={featuredResource.link} download>
+                    <Download size={16} />
+                    Descargar {featuredResource.type}
+                  </a>
+                </Button>
+              </CardContent>
+            </div>
+          </div>
         </Card>
       </section>
 
