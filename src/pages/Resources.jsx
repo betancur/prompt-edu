@@ -29,8 +29,8 @@ function Resources() {
 
       if (error) throw error;
 
-      // Set the first PDF as featured resource
-      const featured = data.find(resource => resource.type === 'PDF');
+      // Set the first PDF resource with 'featured' status as featured resource
+      const featured = data.find(resource => resource.type === 'PDF' && resource.status === 'featured');
       setFeaturedResource(featured || null);
 
       // Set all resources
