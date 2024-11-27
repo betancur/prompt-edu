@@ -7,14 +7,23 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Download, Play, BookOpen, Wrench, ArrowRight } from "lucide-react";
+import { Download, Play, BookOpen, Wrench, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import useEmblaCarousel from 'embla-carousel-react';
 
 function Resources() {
   const [resources, setResources] = useState([]);
   const [featuredResource, setFeaturedResource] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+    align: 'start',
+    slidesToScroll: 1,
+    breakpoints: {
+      '(min-width: 768px)': { slidesToScroll: 2 },
+      '(min-width: 1024px)': { slidesToScroll: 3 }
+    }
+  });
 
   useEffect(() => {
     fetchResources();
@@ -150,38 +159,63 @@ function Resources() {
       {/* Guías y documentos */}
       {pdfResources.length > 0 && (
         <section className="mb-16">
-          <h2 className="text-2xl font-semibold mb-6">Guías y documentos</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {pdfResources.map((resource) => (
-              <Card key={resource.id} className="flex flex-col h-full">
-                <CardHeader>
-                  {resource.status && (
-                    <Badge variant="secondary" className="mb-2 w-fit">
-                      {resource.status}
-                    </Badge>
-                  )}
-                  <div className="h-[250px] mb-4">
-                    <img 
-                      src={resource.image || '/placeholder-pdf.png'} 
-                      alt={resource.title}
-                      className="w-full h-full object-contain rounded-lg"
-                    />
-                  </div>
-                  <CardTitle className="text-xl mb-2">{resource.title}</CardTitle>
-                  {resource.description && (
-                    <CardDescription>{resource.description}</CardDescription>
-                  )}
-                </CardHeader>
-                <CardContent className="mt-auto pt-4">
-                  <Button className="gap-2" asChild>
-                    <a href={resource.link} download>
-                      <Download size={16} />
-                      Descargar PDF
-                    </a>
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-semibold">Guías y documentos</h2>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => emblaApi?.scrollPrev()}
+                className="rounded-full"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => emblaApi?.scrollNext()}
+                className="rounded-full"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+          
+          <div className="overflow-hidden" ref={emblaRef}>
+            <div className="flex gap-6">
+              {pdfResources.map((resource) => (
+                <div className="flex-[0_0_100%] min-w-0 md:flex-[0_0_50%] lg:flex-[0_0_33.333%]" key={resource.id}>
+                  <Card className="flex flex-col h-full">
+                    <CardHeader>
+                      {resource.status && (
+                        <Badge variant="secondary" className="mb-2 w-fit">
+                          {resource.status}
+                        </Badge>
+                      )}
+                      <div className="h-[250px] mb-4">
+                        <img 
+                          src={resource.image || '/placeholder-pdf.png'} 
+                          alt={resource.title}
+                          className="w-full h-full object-contain rounded-lg"
+                        />
+                      </div>
+                      <CardTitle className="text-xl mb-2">{resource.title}</CardTitle>
+                      {resource.description && (
+                        <CardDescription>{resource.description}</CardDescription>
+                      )}
+                    </CardHeader>
+                    <CardContent className="mt-auto pt-4">
+                      <Button className="gap-2" asChild>
+                        <a href={resource.link} download>
+                          <Download size={16} />
+                          Descargar PDF
+                        </a>
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       )}
