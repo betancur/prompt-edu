@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
-import { Star } from 'lucide-react';
+import { Star, ChevronDown } from 'lucide-react';
 import PromptCard from '../components/PromptCard';
-import { Button } from "@/components/ui/button";
-import { secureStorage } from '@/middleware/security';
+import { Button } from "../components/ui/button";
+import { secureStorage } from '../middleware/security';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
+import { cn } from "../lib/utils";
 
 function Library() {
   const [searchParams] = useSearchParams();
@@ -79,10 +81,15 @@ function Library() {
     }
 
     if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase().trim();
+      const query = searchQuery.toLowerCase().trim()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
       filtered = filtered.filter(prompt =>
-        prompt.title.toLowerCase().includes(query) ||
-        prompt.content.toLowerCase().includes(query)
+        prompt.title.toLowerCase()
+          .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+          .includes(query) ||
+        prompt.content.toLowerCase()
+          .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+          .includes(query)
       );
     }
 
@@ -160,18 +167,24 @@ function Library() {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           />
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="flex h-10 w-full md:w-[200px] rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <option value="all">Todas las Categorias</option>
-            {categories.map(category => (
-              <option key={category.id} value={String(category.id)}>
-                {category.name}
-              </option>
-            ))}
-          </select>
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger className="w-full md:w-[280px]">
+              <SelectValue placeholder="Selecciona una categoría" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">
+                Todas las Categorias
+              </SelectItem>
+              {categories.map(category => (
+                <SelectItem 
+                  key={category.id} 
+                  value={String(category.id)}
+                >
+                  {category.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <Button
             variant={showFavorites ? "default" : "outline"}
             className="w-full md:w-auto flex items-center gap-2"
