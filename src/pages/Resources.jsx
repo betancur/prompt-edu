@@ -19,15 +19,30 @@ function Resources() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     align: 'start',
     slidesToScroll: 1,
+    loop: true,
     breakpoints: {
       '(min-width: 768px)': { slidesToScroll: 2 },
       '(min-width: 1024px)': { slidesToScroll: 3 }
     }
   });
 
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [scrollSnaps, setScrollSnaps] = useState([]);
+
   useEffect(() => {
     fetchResources();
   }, []);
+
+  useEffect(() => {
+    if (emblaApi) {
+      setScrollSnaps(emblaApi.scrollSnapList());
+      emblaApi.on('select', () => {
+        setSelectedIndex(emblaApi.selectedScrollSnap());
+      });
+    }
+  }, [emblaApi]);
+
+  const scrollTo = (index) => emblaApi && emblaApi.scrollTo(index);
 
   const fetchResources = async () => {
     try {
@@ -159,27 +174,7 @@ function Resources() {
       {/* Guías y documentos */}
       {pdfResources.length > 0 && (
         <section className="mb-16">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-semibold">Guías y documentos</h2>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => emblaApi?.scrollPrev()}
-                className="rounded-full border-[#4A5AB9] text-[#4A5AB9] hover:bg-[#4A5AB9] hover:text-white"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => emblaApi?.scrollNext()}
-                className="rounded-full border-[#4A5AB9] text-[#4A5AB9] hover:bg-[#4A5AB9] hover:text-white"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
+          <h2 className="text-2xl font-semibold mb-6">Guías y documentos</h2>
           
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex gap-6">
@@ -208,12 +203,48 @@ function Resources() {
                       <Button className="gap-2" asChild>
                         <a href={resource.link} download>
                           <Download size={16} />
-                          Descargar PDF
+                          Descargar PDF_
                         </a>
                       </Button>
                     </CardContent>
                   </Card>
                 </div>
+              ))}
+            </div>
+          </div>
+          
+          <div className="flex justify-between items-center mt-4">
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => emblaApi?.scrollPrev()}
+                className="rounded-full border-[#4A5AB9] text-[#4A5AB9] hover:bg-[#4A5AB9] hover:text-white"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => emblaApi?.scrollNext()}
+                className="rounded-full border-[#4A5AB9] text-[#4A5AB9] hover:bg-[#4A5AB9] hover:text-white"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+            
+            <div className="flex gap-2">
+              {scrollSnaps.map((_, index) => (
+                <button
+                  key={index}
+                  className={`w-2 h-2 rounded-full transition-colors ${
+                    index === selectedIndex
+                      ? 'bg-[#4A5AB9]'
+                      : 'bg-gray-300 hover:bg-gray-400'
+                  }`}
+                  onClick={() => scrollTo(index)}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
               ))}
             </div>
           </div>
@@ -233,6 +264,15 @@ function Resources() {
                       {resource.status}
                     </Badge>
                   )}
+                  <div className="h-[200px] mb-4">
+                    <a href={resource.link} target="_blank" rel="noopener noreferrer" className="cursor-pointer">
+                      <img 
+                        src={resource.image || '/placeholder-video.png'} 
+                        alt={resource.title}
+                        className="w-full h-full object-cover rounded-lg hover:opacity-80 transition-opacity"
+                      />
+                    </a>
+                  </div>
                   <CardTitle className="text-xl mb-2">{resource.title}</CardTitle>
                   {resource.description && (
                     <CardDescription>{resource.description}</CardDescription>
