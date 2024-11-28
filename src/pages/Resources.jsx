@@ -11,6 +11,7 @@ import { Download, Play, BookOpen, Wrench, ArrowRight, ChevronLeft, ChevronRight
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import useEmblaCarousel from 'embla-carousel-react';
+import { Link } from 'react-router-dom';
 
 function Resources() {
   const [resources, setResources] = useState([]);
@@ -232,7 +233,9 @@ function Resources() {
       {/* Guías y documentos */}
       {pdfResources.length > 0 && (
         <section className="mb-16">
-          <h2 className="text-2xl font-semibold mb-6">Guías y documentos</h2>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-semibold">Guías y documentos</h2>
+          </div>
           
           <div className="overflow-hidden" ref={emblaRefDocs}>
             <div className="flex gap-6">
@@ -290,6 +293,10 @@ function Resources() {
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
+
+            <Button variant="outline" asChild>
+              <Link to="/documents">Ver todos_</Link>
+            </Button>
             
             <div className="flex gap-2">
               {scrollSnapsDocs.map((_, index) => (
