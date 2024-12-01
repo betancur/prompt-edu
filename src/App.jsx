@@ -12,8 +12,11 @@ import NotFound from './pages/NotFound';
 import { Toaster } from "@/components/ui/toaster";
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
+import { usePageTracking } from './hooks/usePageTracking';
 
 function App() {
+  usePageTracking();
+
   return (
     <HelmetProvider>
       <div className="min-h-screen bg-background flex flex-col">
