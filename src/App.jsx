@@ -10,10 +10,12 @@ import DocumentLibrary from './pages/DocumentLibrary';
 import NotFound from './pages/NotFound';
 import { Toaster } from "@/components/ui/toaster";
 import Footer from './components/Footer';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <ScrollToTop /> {/* Añade ScrollToTop aquí */}
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<Home />} />
