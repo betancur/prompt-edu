@@ -7,6 +7,7 @@ import Frameworks from './pages/Frameworks';
 import Resources from './pages/Resources';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import DocumentLibrary from './pages/DocumentLibrary';
+import NotFound from './pages/NotFound';
 import { Toaster } from "@/components/ui/toaster";
 import Footer from './components/Footer';
 
@@ -14,7 +15,7 @@ function App() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Routes>
-        <Route path="/" element={<Layout />}>
+        <Route element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="library" element={<Library />} />
           <Route path="frameworks" element={<Frameworks />} />
@@ -22,6 +23,7 @@ function App() {
           <Route path="documents" element={<DocumentLibrary />} />
           <Route path="privacy-policy" element={<PrivacyPolicy />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
       <Toaster />
