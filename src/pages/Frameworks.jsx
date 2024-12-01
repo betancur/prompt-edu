@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Card,
   CardContent,
@@ -5,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { Helmet } from 'react-helmet-async';
 
 function Frameworks() {
   const frameworks = [
@@ -104,71 +106,77 @@ function Frameworks() {
   ]
 
   return (
-    <div className="container mx-auto max-w-[1200px] py-12">
-      <div className="mb-4">
-        <div className="title-decoration">
-          <div className="title-slashes">//</div>
-          <h1 className="text-4xl font-bold font-jost">Marcos de Trabajo</h1>
+    <>
+      <Helmet>
+        <title>Marcos de Trabajo | Aula Prompts</title>
+        <meta name="description" content="Descubre diferentes marcos de trabajo y metodologías para crear prompts efectivos en educación." />
+      </Helmet>
+      <div className="container mx-auto max-w-[1200px] py-12">
+        <div className="mb-4">
+          <div className="title-decoration">
+            <div className="title-slashes">//</div>
+            <h1 className="text-4xl font-bold font-jost">Marcos de Trabajo</h1>
+          </div>
         </div>
-      </div>
-      <p className="text-xl text-muted-foreground mb-8">
-        Frameworks para estructurar tus prompts educativos de manera efectiva
-      </p>
+        <p className="text-xl text-muted-foreground mb-8">
+          Frameworks para estructurar tus prompts educativos de manera efectiva
+        </p>
 
-      <div className="mb-12">
-        <h2 className="text-2xl font-bold font-jost mb-4">¿Qué son los Frameworks de Prompts?</h2>
-        <div className="space-y-4 text-muted-foreground">
-          <p>
-            Como docentes, sabemos que la estructura es fundamental para el aprendizaje efectivo. De la misma manera que utilizamos planificaciones didácticas para organizar nuestras clases, los frameworks de prompts son estructuras que nos ayudan a comunicarnos de manera efectiva con la Inteligencia Artificial.
-          </p>
-          <p>
-            Estos marcos de trabajo nos permiten formular nuestras solicitudes de manera organizada y obtener respuestas más precisas y relevantes para nuestros objetivos pedagógicos.
-          </p>
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold font-jost mb-4">¿Qué son los Frameworks de Prompts?</h2>
+          <div className="space-y-4 text-muted-foreground">
+            <p>
+              Como docentes, sabemos que la estructura es fundamental para el aprendizaje efectivo. De la misma manera que utilizamos planificaciones didácticas para organizar nuestras clases, los frameworks de prompts son estructuras que nos ayudan a comunicarnos de manera efectiva con la Inteligencia Artificial.
+            </p>
+            <p>
+              Estos marcos de trabajo nos permiten formular nuestras solicitudes de manera organizada y obtener respuestas más precisas y relevantes para nuestros objetivos pedagógicos.
+            </p>
+          </div>
         </div>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {frameworks.map(framework => (
-          <Card key={framework.name} className="hover:shadow-md transition-shadow">
-            <CardHeader>
-              <CardTitle className="text-xl font-semibold flex items-center gap-2">
-                <span className="text-green-500 font-bold">//</span> {framework.name}
-              </CardTitle>
-              <CardDescription className="text-muted-foreground mt-2">
-                {framework.description}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-semibold mb-3">Ejemplos</h3>
-                  <div className="space-y-2">
-                    {framework.examples.map((example, i) => (
-                      <p 
-                        key={i} 
-                        className="text-sm text-muted-foreground"
-                        dangerouslySetInnerHTML={{
-                          __html: example.replace(/\*\*(.*?)\*\*/g, '<strong class="text-foreground">$1</strong>')
-                        }}
-                      />
-                    ))}
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {frameworks.map(framework => (
+            <Card key={framework.name} className="hover:shadow-md transition-shadow">
+              <CardHeader>
+                <CardTitle className="text-xl font-semibold flex items-center gap-2">
+                  <span className="text-green-500 font-bold">//</span> {framework.name}
+                </CardTitle>
+                <CardDescription className="text-muted-foreground mt-2">
+                  {framework.description}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold mb-3">Ejemplos</h3>
+                    <div className="space-y-2">
+                      {framework.examples.map((example, i) => (
+                        <p 
+                          key={i} 
+                          className="text-sm text-muted-foreground"
+                          dangerouslySetInnerHTML={{
+                            __html: example.replace(/\*\*(.*?)\*\*/g, '<strong class="text-foreground">$1</strong>')
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h3 className="text-lg font-semibold mb-3">Tips</h3>
+                    <ul className="list-disc list-inside space-y-2">
+                      {framework.tips.map((tip, i) => (
+                        <li key={i} className="text-sm text-muted-foreground">{tip}</li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
-                
-                <div>
-                  <h3 className="text-lg font-semibold mb-3">Tips</h3>
-                  <ul className="list-disc list-inside space-y-2">
-                    {framework.tips.map((tip, i) => (
-                      <li key={i} className="text-sm text-muted-foreground">{tip}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
