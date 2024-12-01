@@ -48,8 +48,12 @@ function Navbar() {
     <nav className="w-full m-0 px-8 py-4 bg-[#001F2C] dark:bg-[#001F2C]">
       <div className="container mx-auto max-w-[1200px] flex justify-between items-center">
         <div className="flex items-center gap-8">
-          <Link to="/" className="text-xl font-bold text-white hover:text-white/80">
-            Aula Prompts
+          <Link to="/" className="flex items-center">
+            <img
+              src="/logo.svg"
+              alt="Aula Prompts Logo"
+              className="h-[32px] md:h-[40px] w-auto max-w-[120px] md:max-w-[160px]"
+            />
           </Link>
           {/* Desktop Navigation */}
           <div className="hidden md:flex gap-8">

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 32">
+  <defs>
+    <style>
+      .cls-1 {
+        font-family: Futura-CondensedMedium, Futura;
+        font-size: 27.61px;
+        font-weight: 500;
+      }
+
+      .cls-1, .cls-2 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        font-family: Futura-CondensedExtraBold, Futura;
+        font-size: 27.32px;
+        font-weight: 700;
+      }
+
+      .cls-3 {
+        letter-spacing: 0em;
+      }
+
+      .cls-4 {
+        letter-spacing: 0em;
+      }
+
+      .cls-5 {
+        letter-spacing: 0em;
+      }
+
+      .cls-6 {
+        letter-spacing: 0em;
+      }
+    </style>
+  </defs>
+  <text class="cls-2" transform="translate(7.75 25.24)"><tspan x="0" y="0">Aula</tspan></text>
+  <text class="cls-1" transform="translate(62.26 25.53)"><tspan x="0" y="0">P</tspan><tspan class="cls-4" x="10.94" y="0">r</tspan><tspan class="cls-5" x="18.4" y="0">o</tspan><tspan class="cls-6" x="29.03" y="0">m</tspan><tspan class="cls-3" x="45.84" y="0">p</tspan><tspan x="56.76" y="0">ts</tspan></text>
+</svg>
