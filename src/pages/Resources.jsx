@@ -14,6 +14,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { Link } from 'react-router-dom';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useTrackDownload } from '../hooks/useTrackDownload';
 
 function Resources() {
   const [resources, setResources] = useState([]);
@@ -67,6 +68,17 @@ function Resources() {
   const [scrollSnapsDocs, setScrollSnapsDocs] = useState([]);
   const [scrollSnapsVideos, setScrollSnapsVideos] = useState([]);
   const [scrollSnapsTools, setScrollSnapsTools] = useState([]);
+  const { trackAndDownload } = useTrackDownload();
+
+  const handleDownload = (resource, isFeature = false) => {
+    trackAndDownload({
+      title: resource.title,
+      type: resource.type || 'pdf',
+      category: 'Resource',
+      source: isFeature ? 'featured_resource' : 'resource_library',
+      link: resource.link
+    });
+  };
 
   useEffect(() => {
     if (emblaApi) {
@@ -206,11 +218,12 @@ function Resources() {
                     </div>
                   </CardHeader>
                   <CardContent className="mt-auto">
-                    <Button className="gap-2" asChild>
-                      <a href={featuredResource.link} download>
-                        <Download size={16} />
-                        Descargar {featuredResource.type}
-                      </a>
+                    <Button 
+                      className="gap-2" 
+                      onClick={() => handleDownload(featuredResource, true)}
+                    >
+                      <Download size={16} />
+                      Descargar {featuredResource.type}
                     </Button>
                   </CardContent>
                 </div>
@@ -268,11 +281,12 @@ function Resources() {
                         )}
                       </CardHeader>
                       <CardContent className="mt-auto pt-4">
-                        <Button className="gap-2" asChild>
-                          <a href={resource.link} download>
-                            <Download size={16} />
-                            Descargar PDF_
-                          </a>
+                        <Button 
+                          className="gap-2" 
+                          onClick={() => handleDownload(resource)}
+                        >
+                          <Download size={16} />
+                          Descargar PDF
                         </Button>
                       </CardContent>
                     </Card>
@@ -302,7 +316,7 @@ function Resources() {
               </div>
 
               <Button variant="outline" asChild>
-                <Link to="/documents">Ver todos_</Link>
+                <Link to="/documents">Ver todos</Link>
               </Button>
               
               <div className="flex gap-2">

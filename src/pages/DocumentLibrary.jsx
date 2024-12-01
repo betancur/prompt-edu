@@ -13,11 +13,13 @@ import { Badge } from "../components/ui/badge";
 import { Input } from "../components/ui/input";
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useTrackDownload } from '../hooks/useTrackDownload';
 
 function DocumentLibrary() {
   const [documents, setDocuments] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
+  const { trackAndDownload } = useTrackDownload();
 
   useEffect(() => {
     fetchDocuments();
@@ -46,8 +48,14 @@ function DocumentLibrary() {
     return matchesSearch;
   });
 
-  const handleDownload = (url, filename) => {
-    window.open(url, '_blank');
+  const handleDownload = (doc) => {
+    trackAndDownload({
+      title: doc.title,
+      type: 'pdf',
+      category: 'Document',
+      source: 'document_library',
+      link: doc.link
+    });
   };
 
   return (
@@ -109,11 +117,12 @@ function DocumentLibrary() {
                       )}
                     </CardHeader>
                     <CardContent className="mt-auto pt-4">
-                      <Button className="gap-2" asChild>
-                        <a href={doc.link} target="_blank" rel="noopener noreferrer">
-                          <Download size={16} />
-                          Descargar PDF
-                        </a>
+                      <Button 
+                        className="gap-2" 
+                        onClick={() => handleDownload(doc)}
+                      >
+                        <Download size={16} />
+                        Descargar PDF
                       </Button>
                     </CardContent>
                   </Card>
