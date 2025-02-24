@@ -8,6 +8,8 @@ import Frameworks from './pages/Frameworks';
 import Resources from './pages/Resources';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import DocumentLibrary from './pages/DocumentLibrary';
+import ImageGenerator from './pages/ImageGenerator';
+import ImageGallery from './pages/ImageGallery';
 import NotFound from './pages/NotFound';
 import { Toaster } from "@/components/ui/toaster";
 import Footer from './components/Footer';
@@ -29,6 +31,8 @@ function App() {
             <Route path="resources" element={<Resources />} />
             <Route path="documents" element={<DocumentLibrary />} />
             <Route path="privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="image-generator" element={<ImageGenerator />} />
+            <Route path="image-gallery" element={<ImageGallery />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
