@@ -91,20 +91,6 @@ function ImageGenerator() {
               </p>
             </div>
 
-            <Button
-              className="w-full"
-              onClick={handleGenerate}
-              disabled={isGenerating}
-            >
-              {isGenerating ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Generando imagen...
-                </>
-              ) : (
-                'Generar Imagen'
-              )}
-            </Button>
           </div>
 
           {/* Preview Section */}

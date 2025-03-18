@@ -41,13 +41,6 @@ function Navbar() {
       >
         Recursos
       </Link>
-      <Link 
-        to="/image-generator" 
-        className={`${mobile ? 'text-foreground hover:text-foreground/80' : 'text-white hover:text-white/80'} transition-colors`}
-      onClick={() => mobile && setIsOpen(false)}
-      >
-        Generador IA
-      </Link>
     </>
   );
 
